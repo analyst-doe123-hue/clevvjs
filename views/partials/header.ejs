@@ -1,0 +1,25 @@
+<header class="header">
+    <nav class="navbar">
+        <a href="/" class="nav-brand">
+            <i class="fas fa-graduation-cap"></i>
+            Daisy Portal
+        </a>
+        <ul class="nav-menu">
+            <li><a href="/"
+                    class="nav-link <%= typeof activePage !== 'undefined' && activePage === 'home' ? 'active' : '' %>">Home</a>
+            </li>
+            <li><a href="/about"
+                    class="nav-link <%= typeof activePage !== 'undefined' && activePage === 'about' ? 'active' : '' %>">About
+                    Us</a></li>
+            <li><a href="/team"
+                    class="nav-link <%= typeof activePage !== 'undefined' && activePage === 'team' ? 'active' : '' %>">Our
+                    Team</a></li>
+            <li><a href="/success"
+                    class="nav-link <%= typeof activePage !== 'undefined' && activePage === 'success' ? 'active' : '' %>">Success
+                    Stories</a></li>
+            <li><a href="/contact"
+                    class="nav-link <%= typeof activePage !== 'undefined' && activePage === 'contact' ? 'active' : '' %>">Contact</a>
+            </li>
+        </ul>
+    </nav>
+</header>

@@ -1,0 +1,27 @@
+{
+    "name": "student-portfolio-node",
+    "version": "1.0.0",
+    "description": "Student portfolio migrated from Flask to Node.js (Express + EJS)",
+    "type": "module",
+    "main": "app.js",
+    "scripts": {
+        "start": "node app.js",
+        "dev": "nodemon app.js"
+    },
+    "dependencies": {
+        "@huggingface/inference": "^4.13.0",
+        "axios": "^1.13.1",
+        "cloudinary": "^1.41.3",
+        "csv-parser": "^3.0.0",
+        "csv-writer": "^1.6.0",
+        "dotenv": "^16.6.1",
+        "ejs": "^3.1.9",
+        "express": "^4.18.2",
+        "multer": "^2.0.2",
+        "nodemailer": "^7.0.9",
+        "pdfkit": "^0.17.2"
+    },
+    "devDependencies": {
+        "nodemon": "^3.1.10"
+    }
+}

@@ -1,0 +1,52 @@
+<%- include('partials/head', {title}) %>
+    <%- include('partials/header') %>
+
+        <main class="container">
+            <!-- Page Header -->
+            <section class="department-hero">
+                <div class="hero-content">
+                    <div class="department-icon">
+                        <i class="fas fa-globe-europe"></i>
+                    </div>
+                    <h1>German Sponsored Students</h1>
+                    <p class="lead">International education partnership excellence</p>
+                    <div class="hero-stats">
+                        <div class="stat">
+                            <span class="number">
+                                <%= totalStudents %>
+                            </span>
+                            <span class="label">Total Scholars</span>
+                        </div>
+                        <div class="stat">
+                            <span class="number">94%</span>
+                            <span class="label">Success Rate</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Search Section -->
+            <section class="search-section">
+                <div class="search-card">
+                    <h3><i class="fas fa-search"></i> Direct Student Search</h3>
+                    <form method="POST" action="/departments/search">
+                        <input type="hidden" name="department" value="Germans">
+                        <div class="search-input-group">
+                            <input type="text" name="adm_no" placeholder="Enter GER-series admission number" required>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-search"></i> Search German Student
+                            </button>
+                        </div>
+                        <p class="search-hint">
+                            <i class="fas fa-passport"></i>
+                            Search by unique German sponsorship identifier
+                        </p>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Rest of the content same as department_search.ejs -->
+            <%- include('department_search_content') %>
+        </main>
+
+        <%- include('partials/footer') %>

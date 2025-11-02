@@ -1,0 +1,58 @@
+<section class="students-section">
+    <div class="enhanced-card">
+        <div class="card-header">
+            <h3><i class="fas fa-users me-2"></i> Students in <%= dept %> Department (<%= totalStudents %>)</h3>
+        </div>
+
+        <div class="card-body">
+            <% if (students && students.length> 0) { %>
+                <div class="row g-4">
+                    <% students.forEach(student=> { %>
+                        <div class="col-md-4 col-sm-6">
+                            <div class="card shadow-sm border-0 h-100 student-card">
+                                <div class="student-photo text-center bg-light p-3">
+                                    <img src="<%= student.Photo || '/images/placeholder.jpg' %>"
+                                        alt="<%= student['Full Name'] %>" class="img-fluid rounded shadow-sm"
+                                        onerror="this.src='/images/placeholder.jpg'">
+                                </div>
+
+                                <div class="card-body text-center">
+                                    <h5 class="fw-bold text-maroon mb-1">
+                                        <%= student['Full Name'] %>
+                                    </h5>
+                                    <p class="small text-muted"><i class="fas fa-id-card me-1"></i>
+                                        <%= student['Admission Number'] %>
+                                    </p>
+                                    <p class="small mb-1"><i class="fas fa-book me-1"></i>
+                                        <%= student.Class || 'Not specified' %>
+                                    </p>
+                                    <p class="small mb-1"><i class="fas fa-school me-1"></i>
+                                        <%= student.school || 'Not specified' %>
+                                    </p>
+
+                                    <div class="d-flex justify-content-center gap-2 mt-3">
+                                        <a href="/students/<%= student['Admission Number'] %>"
+                                            class="btn btn-maroon btn-sm text-white">
+                                            <i class="fas fa-user me-1"></i> Profile
+                                        </a>
+                                        <a href="/gallery/<%= student['Admission Number'] %>"
+                                            class="btn btn-outline-maroon btn-sm">
+                                            <i class="fas fa-images me-1"></i> Gallery
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <% }) %>
+                </div>
+                <% } else { %>
+                    <div class="no-results text-center py-5">
+                        <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                        <h3 class="text-muted">No students found</h3>
+                        <p class="text-muted">Try changing your filter or go back to <a href="/departments"
+                                class="text-maroon fw-bold">Departments</a>.</p>
+                    </div>
+                    <% } %>
+        </div>
+    </div>
+</section>

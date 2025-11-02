@@ -1,0 +1,326 @@
+<%- include('partials/head', {title: student['Full Name'] + ' - Profile | Daisy Portal' }) %>
+    <%- include('partials/header', {activePage: 'profile' }) %>
+
+        <main class="container">
+            <!-- Profile Header -->
+            <section class="profile-header">
+                <div class="profile-photo">
+                    <% if (student.Photo && student.Photo !=='static/images/' ) { %>
+                        <img src="<%= student.Photo.startsWith('static/') ? '/' + student.Photo : student.Photo %>"
+                            alt="<%= student['Full Name'] %>" onerror="this.src='/images/placeholder.jpg'">
+                        <% } else { %>
+                            <img src="/images/placeholder.jpg" alt="<%= student['Full Name'] %>">
+                            <% } %>
+                </div>
+                <div class="profile-info">
+                    <h1>
+                        <%= student['Full Name'] %>
+                    </h1>
+                    <p class="admission-number">
+                        <%= student['Admission Number'] %>
+                    </p>
+                    <p class="department">
+                        <%= student.Department || 'General Department' %>
+                    </p>
+
+                    <div class="profile-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-graduation-cap"></i>
+                            <span>
+                                <%= student.Class || 'Not specified' %>
+                            </span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-school"></i>
+                            <span>
+                                <%= student.school || 'Not specified' %>
+                            </span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-briefcase"></i>
+                            <span>
+                                <%= student.career || 'Not specified' %>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Profile Details Grid -->
+            <div class="profile-grid">
+                <!-- Personal Information Card -->
+                <div class="enhanced-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-user-circle"></i> Personal Information</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="detail-grid">
+                            <div class="detail-item">
+                                <label>Age:</label>
+                                <span>
+                                    <%= student.Age || 'Not specified' %>
+                                </span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Sex:</label>
+                                <span>
+                                    <%= student.Sex || 'Not specified' %>
+                                </span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Parent/Guardian:</label>
+                                <span>
+                                    <%= student['Parent/Guardian Name'] || 'Not specified' %>
+                                </span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Contact:</label>
+                                <span>
+                                    <%= student.Contact || 'Not specified' %>
+                                </span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Residence:</label>
+                                <span>
+                                    <%= student['Place of Residence'] || 'Not specified' %>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Biography Card -->
+                <div class="enhanced-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-book-open"></i> Biography</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="bio-editor">
+                            <div id="bio-view">
+                                <p class="biography">
+                                    <%= student['Small Biography'] || 'No biography available for this student.' %>
+                                </p>
+                                <div class="action-buttons">
+                                    <button class="btn btn-outline" onclick="openBioModal()">
+                                        <i class="fas fa-expand"></i> View Full Biography
+                                    </button>
+                                    <button class="btn btn-outline" onclick="toggleBioEdit()">
+                                        <i class="fas fa-edit"></i> Edit Biography
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="bio-edit" style="display: none;">
+                                <textarea class="bio-textarea" id="bio-text" maxlength="1000"
+                                    placeholder="Tell us about the student..."><%= student['Small Biography'] || '' %></textarea>
+                                <div class="char-count">
+                                    <span id="char-count">0</span>/1000 characters
+                                </div>
+                                <div class="action-buttons mt-3">
+                                    <button class="btn btn-primary" onclick="saveBio()">
+                                        <i class="fas fa-save"></i> Save Changes
+                                    </button>
+                                    <button class="btn btn-outline" onclick="toggleBioEdit()">
+                                        <i class="fas fa-times"></i> Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Academic Terms Card -->
+                <div class="enhanced-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-calendar-alt"></i> Academic Terms</h3>
+                    </div>
+                    <div class="card-body">
+                        <form id="term-form">
+                            <div class="form-group">
+                                <label for="termName">Term Name</label>
+                                <input type="text" class="form-control" id="termName" name="termName" required
+                                    placeholder="e.g., Term 1 2024">
+                            </div>
+                            <div class="form-group">
+                                <label for="termDetails">Term Details</label>
+                                <textarea class="form-control" id="termDetails" name="termDetails" rows="3"
+                                    placeholder="Enter term updates and progress..."></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-plus-circle"></i> Add Term
+                            </button>
+                        </form>
+
+                        <% if (terms && terms.length> 0) { %>
+                            <div class="terms-list mt-4">
+                                <h4>Recent Terms</h4>
+                                <% terms.slice(0, 3).forEach(term=> { %>
+                                    <div class="term-item">
+                                        <div class="term-name">
+                                            <%= term['Term Name'] %>
+                                        </div>
+                                        <div class="term-details">
+                                            <%= term['Term Details'] %>
+                                        </div>
+                                        <div class="term-date">
+                                            <%= term['Timestamp'] ? new Date(term['Timestamp']).toLocaleDateString()
+                                                : 'Recent' %>
+                                        </div>
+                                    </div>
+                                    <% }) %>
+                            </div>
+                            <% } %>
+                    </div>
+                </div>
+
+                <!-- AI Report Card -->
+                <div class="enhanced-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-robot"></i> AI Report Generator</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="report-section">
+                            <div class="report-icon">
+                                <i class="fas fa-file-pdf"></i>
+                            </div>
+                            <h4>Generate Student Report</h4>
+                            <p class="text-muted">Create a comprehensive PDF report using AI analysis of student data
+                            </p>
+
+                            <div class="report-actions">
+                                <a href="/generate-report/<%= student['Admission Number'] %>" class="btn btn-primary"
+                                    id="generate-report">
+                                    <i class="fas fa-robot"></i> Generate Report
+                                </a>
+                            </div>
+
+                            <% if (reports && reports.length> 0) { %>
+                                <div class="mt-4">
+                                    <h5>Latest Report</h5>
+                                    <% const latestReport=reports[0]; %>
+                                        <div class="term-item">
+                                            <div class="term-name">
+                                                <%= latestReport.filename || 'Student Report' %>
+                                            </div>
+                                            <div class="term-details">
+                                                Generated: <%= latestReport.created_at ? new
+                                                    Date(latestReport.created_at).toLocaleDateString() : 'Recently' %>
+                                            </div>
+                                            <div class="action-buttons">
+                                                <a href="/download-report/<%= latestReport.public_id %>"
+                                                    class="btn btn-outline" download>
+                                                    <i class="fas fa-download"></i> Download PDF
+                                                </a>
+                                            </div>
+                                        </div>
+                                </div>
+                                <% } %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <section class="profile-actions">
+                <div class="action-buttons">
+                    <a href="/gallery/<%= student['Admission Number'] %>" class="btn btn-primary">
+                        <i class="fas fa-images"></i> Photo Gallery
+                    </a>
+                    <a href="/results/<%= student['Admission Number'] %>" class="btn btn-primary">
+                        <i class="fas fa-chart-line"></i> Academic Results
+                    </a>
+                    <a href="/letters/<%= student['Admission Number'] %>" class="btn btn-primary">
+                        <i class="fas fa-envelope"></i> Sponsor Letters
+                    </a>
+                    <a href="/students" class="btn btn-outline">
+                        <i class="fas fa-arrow-left"></i> Back to Students
+                    </a>
+                </div>
+            </section>
+        </main>
+
+        <!-- Biography Modal -->
+        <div class="modal" id="bioModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>
+                        <i class="fas fa-book-open"></i>
+                        <%= student['Full Name'] %> - Full Biography
+                    </h3>
+                    <span class="close">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <p class="biography">
+                        <%= student['Small Biography'] || 'No biography available for this student.' %>
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-outline" onclick="closeBioModal()">Close</button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // Biography functionality
+            function toggleBioEdit() {
+                const bioView = document.getElementById('bio-view');
+                const bioEdit = document.getElementById('bio-edit');
+                const bioText = document.getElementById('bio-text');
+
+                if (bioEdit.style.display === 'none') {
+                    bioView.style.display = 'none';
+                    bioEdit.style.display = 'block';
+                    bioText.focus();
+                    updateCharCount();
+                } else {
+                    bioView.style.display = 'block';
+                    bioEdit.style.display = 'none';
+                }
+            }
+
+            function updateCharCount() {
+                const bioText = document.getElementById('bio-text');
+                const charCount = document.getElementById('char-count');
+                charCount.textContent = bioText.value.length;
+            }
+
+            function saveBio() {
+                const bioText = document.getElementById('bio-text').value;
+                // Implement save functionality here
+                console.log('Saving biography:', bioText);
+                toggleBioEdit();
+            }
+
+            function openBioModal() {
+                document.getElementById('bioModal').style.display = 'block';
+            }
+
+            function closeBioModal() {
+                document.getElementById('bioModal').style.display = 'none';
+            }
+
+            // Term form submission
+            document.getElementById('term-form').addEventListener('submit', function (e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                // Implement term submission here
+                console.log('Term data:', Object.fromEntries(formData));
+                this.reset();
+            });
+
+            // Report generation
+            document.getElementById('generate-report').addEventListener('click', function (e) {
+                this.innerHTML = '<span class="spinner"></span> Generating...';
+                this.classList.add('loading');
+            });
+
+            // Initialize character count
+            document.addEventListener('DOMContentLoaded', function () {
+                const bioText = document.getElementById('bio-text');
+                if (bioText) {
+                    bioText.addEventListener('input', updateCharCount);
+                    updateCharCount();
+                }
+            });
+        </script>
+
+        <%- include('partials/footer') %>

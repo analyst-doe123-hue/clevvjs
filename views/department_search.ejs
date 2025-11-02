@@ -1,0 +1,297 @@
+<%- include('partials/head', {title: dept + ' Department | Daisy Portal' }) %>
+    <%- include('partials/header', {activePage: 'departments' }) %>
+
+        <main class="container">
+            <!-- Breadcrumb/Heading -->
+            <section class="page-header">
+                <div class="header-content">
+                    <nav class="breadcrumb">
+                        <a href="/departments">Departments</a>
+                        <span class="separator">/</span>
+                        <span class="current">
+                            <%= dept %>
+                                <% if (typeof currentLevel !=='undefined' && currentLevel) { %>
+                                    <span class="separator">/</span>
+                                    <span class="current">
+                                        <%= currentLevel.charAt(0).toUpperCase() + currentLevel.slice(1) %>
+                                    </span>
+                                    <% } %>
+                        </span>
+                    </nav>
+                    <h1>
+                        <%= dept %> Department
+                            <% if (typeof currentLevel !=='undefined' && currentLevel) { %>
+                                - <%= currentLevel.charAt(0).toUpperCase() + currentLevel.slice(1) %>
+                                    <% } %>
+                    </h1>
+                    <p class="lead">
+                        <%= totalStudents %> students found
+                    </p>
+                    <div class="header-actions">
+                        <a href="/departments" class="btn btn-outline">
+                            <i class="fas fa-arrow-left"></i> Back to Departments
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Search Form -->
+            <section class="search-section">
+                <div class="enhanced-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-search"></i> Quick Student Search</h3>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" action="/departments/search" class="search-form-inline">
+                            <input type="hidden" name="department" value="<%= dept %>">
+                            <div class="search-input-group">
+                                <input type="text" name="adm_no" placeholder="Enter Admission Number" required
+                                    value="<%= typeof adm_no !== 'undefined' ? adm_no : '' %>">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-search"></i> Search
+                                </button>
+                            </div>
+                        </form>
+
+                        <% if (typeof error !=='undefined' && error) { %>
+                            <div class="error-message mt-3">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <%= error %>
+                            </div>
+                            <% } %>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Academic Level Selection -->
+            <% if (levels) { %>
+                <section class="level-section">
+                    <div class="enhanced-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-layer-group"></i> Browse by Academic Level</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="level-cards">
+                                <div
+                                    class="level-card <%= typeof currentLevel !== 'undefined' && currentLevel === 'primary' ? 'active' : '' %>">
+                                    <a href="/departments/<%= dept.toLowerCase().replace(/\s+/g, '-') %>/primary"
+                                        class="level-link">
+                                        <div class="level-icon">
+                                            <i class="fas fa-school"></i>
+                                        </div>
+                                        <div class="level-info">
+                                            <h4>Primary Education</h4>
+                                            <p>Foundation stage students</p>
+                                            <span class="badge">
+                                                <%= levels.Primary.length %> students
+                                            </span>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div
+                                    class="level-card <%= typeof currentLevel !== 'undefined' && currentLevel === 'highschool' ? 'active' : '' %>">
+                                    <a href="/departments/<%= dept.toLowerCase().replace(/\s+/g, '-') %>/highschool"
+                                        class="level-link">
+                                        <div class="level-icon">
+                                            <i class="fas fa-graduation-cap"></i>
+                                        </div>
+                                        <div class="level-info">
+                                            <h4>High School</h4>
+                                            <p>Secondary education preparation</p>
+                                            <span class="badge">
+                                                <%= levels.Highschool.length %> students
+                                            </span>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div
+                                    class="level-card <%= typeof currentLevel !== 'undefined' && currentLevel === 'university' ? 'active' : '' %>">
+                                    <a href="/departments/<%= dept.toLowerCase().replace(/\s+/g, '-') %>/university"
+                                        class="level-link">
+                                        <div class="level-icon">
+                                            <i class="fas fa-university"></i>
+                                        </div>
+                                        <div class="level-info">
+                                            <h4>University</h4>
+                                            <p>Higher education scholars</p>
+                                            <span class="badge">
+                                                <%= levels.University.length %> students
+                                            </span>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <% } %>
+
+                    <!-- Student Cards -->
+                    <section class="students-section">
+                        <div class="enhanced-card">
+                            <div class="card-header">
+                                <h3>
+                                    <i class="fas fa-users"></i>
+                                    <% if (typeof currentLevel !=='undefined' && currentLevel) { %>
+                                        <%= currentLevel.charAt(0).toUpperCase() + currentLevel.slice(1) %> Students
+                                            <% } else { %>
+                                                All Students
+                                                <% } %>
+                                                    (<%= totalStudents %>)
+                                </h3>
+                            </div>
+                            <div class="card-body">
+                                <% if (students && students.length> 0) { %>
+                                    <div class="students-grid">
+                                        <% students.forEach(student=> { %>
+                                            <div class="student-card">
+                                                <div class="student-photo">
+                                                    <img src="<%= student.Photo || '/images/placeholder.jpg' %>"
+                                                        alt="<%= student['Full Name'] %>"
+                                                        onerror="this.src='/images/placeholder.jpg'">
+                                                </div>
+                                                <div class="student-info">
+                                                    <h4>
+                                                        <%= student['Full Name'] %>
+                                                    </h4>
+                                                    <p class="admission-number">
+                                                        <%= student['Admission Number'] %>
+                                                    </p>
+                                                    <p class="class-level">
+                                                        <i class="fas fa-graduation-cap"></i>
+                                                        <%= student.Class || 'Not specified' %>
+                                                    </p>
+                                                    <p class="school">
+                                                        <i class="fas fa-school"></i>
+                                                        <%= student.school || 'Not specified' %>
+                                                    </p>
+                                                    <p class="career-aspiration">
+                                                        <i class="fas fa-briefcase"></i>
+                                                        <strong>Career:</strong>
+                                                        <%= student.career || 'Not specified' %>
+                                                    </p>
+
+                                                    <div class="student-actions">
+                                                        <a href="/students/<%= student['Admission Number'] %>"
+                                                            class="btn btn-primary">
+                                                            <i class="fas fa-id-card"></i> View Profile
+                                                        </a>
+                                                        <a href="/students/<%= student['Admission Number'] %>/gallery"
+                                                            class="btn btn-outline">
+                                                            <i class="fas fa-images"></i> Gallery
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <% }) %>
+                                    </div>
+                                    <% } else { %>
+                                        <div class="no-students">
+                                            <i class="fas fa-user-graduate fa-3x"></i>
+                                            <h4>No Students Found</h4>
+                                            <p>There are currently no students
+                                                <% if (typeof currentLevel !=='undefined' && currentLevel) { %>
+                                                    in the <%= currentLevel %> level
+                                                        <% } else { %>
+                                                            in this department
+                                                            <% } %>.
+                                            </p>
+                                        </div>
+                                        <% } %>
+                            </div>
+                        </div>
+                    </section>
+        </main>
+
+        <style>
+            .breadcrumb {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                margin-bottom: 1rem;
+                font-size: 0.9rem;
+            }
+
+            .breadcrumb a {
+                color: var(--maroon);
+                text-decoration: none;
+                transition: color 0.3s ease;
+            }
+
+            .breadcrumb a:hover {
+                color: var(--dark-maroon);
+                text-decoration: underline;
+            }
+
+            .breadcrumb .separator {
+                color: var(--text-muted);
+            }
+
+            .breadcrumb .current {
+                color: var(--text-dark);
+                font-weight: 600;
+            }
+
+            .header-content {
+                margin-bottom: 2rem;
+            }
+
+            .header-actions {
+                margin-top: 1rem;
+            }
+
+            .search-form-inline {
+                display: flex;
+                gap: 0;
+            }
+
+            .search-form-inline input {
+                flex: 1;
+                padding: 1rem;
+                border: 2px solid var(--maroon);
+                border-right: none;
+                border-radius: 8px 0 0 8px;
+                font-size: 1rem;
+                transition: border-color 0.3s ease;
+            }
+
+            .search-form-inline input:focus {
+                outline: none;
+                border-color: var(--dark-maroon);
+            }
+
+            .search-form-inline button {
+                border-radius: 0 8px 8px 0;
+                padding: 0 1.5rem;
+            }
+
+            .level-card.active {
+                border: 2px solid var(--maroon);
+                transform: translateY(-2px);
+                box-shadow: 0 8px 25px rgba(128, 0, 0, 0.2);
+            }
+
+            .level-card.active .level-icon {
+                background: var(--maroon);
+                color: var(--white);
+            }
+  
+            .student-info .class-level,
+            .student-info .school,
+            .student-info .career-aspiration {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                margin-bottom: 0.5rem;
+                font-size: 0.9rem;
+            }
+
+            .student-info .class-level i,
+            .student-info .school i,
+            .student-info .career-aspiration i {
+                color: var(--maroon);
+                width: 16px;
+            }
+        </style>
+
+        <%- include('partials/footer') %>

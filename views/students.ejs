@@ -1,0 +1,371 @@
+// routes/students.js
+import express from "express";
+import { readCSV } from "../lib/csvStore.js";
+const router = express.Router();
+
+// GET /students — List, search, or filter
+router.get("/", async (req, res) => {
+    try {
+        const q = req.query.q ? req.query.q.toLowerCase() : "";
+        const dept = req.query.department ? req.query.department.toLowerCase() : "";
+
+        const students = await readCSV("students.csv");
+
+        // Filtering logic
+        const filtered = students.filter((s) => {
+            const name = s["Full Name"]?.toLowerCase() || "";
+            const adm = s["Admission Number"]?.toLowerCase() || "";
+            const department = s["Department"]?.toLowerCase() || "";
+
+            const matchesQ = !q || name.includes(q) || adm.includes(q);
+            const matchesDept = !dept || department === dept;
+            return matchesQ && matchesDept;
+        });
+
+        res.render("students", {
+            title: "Students",
+            students: filtered,
+            q,
+            dept,
+            totalStudents: filtered.length,
+        });
+    } catch (error) {
+        console.error("Error loading students:", error);
+        res.status(500).send("Server Error");
+    }
+});
+
+// GET /students/:adm_no — Individual student profile
+router.get("/:adm_no", async (req, res) => {
+    try {
+        const adm_no = req.params.adm_no;
+        const students = await readCSV("students.csv");
+        const student = students.find((s) => s["Admission Number"] === adm_no);
+
+        if (!student) {
+            return res.status(404).render("error", {
+                title: "Student Not Found",
+                error: "Student Not Found",
+                message: `No student found with admission number: ${adm_no}`
+            });
+        }
+
+        // Mock data for terms (to avoid 'terms is not defined')
+        const terms = [
+            {
+                'Term Name': 'Term 1 2024',
+                'Term Details': 'Excellent performance in mathematics and sciences. Showed great improvement in language arts.',
+                'Timestamp': new Date('2024-01-15').toISOString()
+            },
+            {
+                'Term Name': 'Term 3 2023',
+                'Term Details': 'Good progress in all subjects. Particularly strong in creative arts and physical education.',
+                'Timestamp': new Date('2023-09-10').toISOString()
+            },
+            {
+                'Term Name': 'Term 2 2023',
+                'Term Details': 'Consistent performance across all subjects. Active participation in extracurricular activities.',
+                'Timestamp': new Date('2023-05-20').toISOString()
+            }
+        ];
+
+        // Mock data for reports
+        const reports = [
+            {
+                filename: `Academic_Report_${student['Full Name'].replace(/\s+/g, '_')}_2024.pdf`,
+                created_at: new Date('2024-02-01').toISOString(),
+                public_id: `report_${adm_no}_2024`
+            },
+            {
+                filename: `Progress_Report_${student['Full Name'].replace(/\s+/g, '_')}_2023.pdf`,
+                created_at: new Date('2023-11-15').toISOString(),
+                public_id: `report_${adm_no}_2023`
+            }
+        ];
+
+        res.render("profile", {
+            title: `${student["Full Name"]} - Profile | Daisy Portal`,
+            student: student,
+            terms: terms,
+            reports: reports
+        });
+    } catch (error) {
+        console.error("Error fetching student:", error);
+        res.status(500).render("error", {
+            title: "Server Error",
+            error: "Server Error",
+            message: "Unable to load student profile. Please try again later."
+        });
+    }
+});
+
+// POST /students/:adm_no/update-bio — Update student biography
+router.post("/:adm_no/update-bio", async (req, res) => {
+    try {
+        const adm_no = req.params.adm_no;
+        const { biography } = req.body;
+
+        // In a real application, you would update this in your database
+        // For now, we'll just log it and return success
+        console.log(`Updating biography for student ${adm_no}:`, biography);
+
+        res.json({
+            success: true,
+            message: "Biography updated successfully",
+            biography: biography
+        });
+    } catch (error) {
+        console.error("Error updating biography:", error);
+        res.status(500).json({
+            success: false,
+            message: "Failed to update biography"
+        });
+    }
+});
+
+// POST /students/:adm_no/update-terms — Add new term/semester
+router.post("/:adm_no/update-terms", async (req, res) => {
+    try {
+        const adm_no = req.params.adm_no;
+        const { termName, termDetails } = req.body;
+
+        // In a real application, you would save this to your database
+        console.log(`Adding term for student ${adm_no}:`, { termName, termDetails });
+
+        res.json({
+            success: true,
+            message: "Term added successfully",
+            term: {
+                'Term Name': termName,
+                'Term Details': termDetails,
+                'Timestamp': new Date().toISOString()
+            }
+        });
+    } catch (error) {
+        console.error("Error adding term:", error);
+        res.status(500).json({
+            success: false,
+            message: "Failed to add term"
+        });
+    }
+});
+
+// GET /students/:adm_no/generate-report — Generate AI report
+router.get("/:adm_no/generate-report", async (req, res) => {
+    try {
+        const adm_no = req.params.adm_no;
+        const students = await readCSV("students.csv");
+        const student = students.find((s) => s["Admission Number"] === adm_no);
+
+        if (!student) {
+            return res.status(404).json({
+                success: false,
+                message: "Student not found"
+            });
+        }
+
+        // Simulate report generation (in real app, this would call an AI service)
+        console.log(`Generating AI report for student: ${student['Full Name']}`);
+
+        // Simulate processing time
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
+        const newReport = {
+            filename: `AI_Report_${student['Full Name'].replace(/\s+/g, '_')}_${new Date().getFullYear()}.pdf`,
+            created_at: new Date().toISOString(),
+            public_id: `ai_report_${adm_no}_${Date.now()}`
+        };
+
+        res.json({
+            success: true,
+            message: "Report generated successfully",
+            report: newReport,
+            downloadUrl: `/students/${adm_no}/download-report/${newReport.public_id}`
+        });
+    } catch (error) {
+        console.error("Error generating report:", error);
+        res.status(500).json({
+            success: false,
+            message: "Failed to generate report"
+        });
+    }
+});
+
+// GET /students/:adm_no/download-report/:public_id — Download report
+router.get("/:adm_no/download-report/:public_id", async (req, res) => {
+    try {
+        const { adm_no, public_id } = req.params;
+
+        // In a real application, you would fetch the actual PDF file
+        // For now, we'll simulate a download
+        console.log(`Downloading report ${public_id} for student ${adm_no}`);
+
+        // Simulate file download
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `attachment; filename="student_report_${adm_no}.pdf"`);
+        
+        // Send a simple message (in real app, this would be the actual PDF buffer)
+        res.send('PDF content would be here in a real application');
+    } catch (error) {
+        console.error("Error downloading report:", error);
+        res.status(500).json({
+            success: false,
+            message: "Failed to download report"
+        });
+    }
+});
+
+// GET /students/:adm_no/gallery — Student gallery
+router.get("/:adm_no/gallery", async (req, res) => {
+    try {
+        const adm_no = req.params.adm_no;
+        const students = await readCSV("students.csv");
+        const student = students.find((s) => s["Admission Number"] === adm_no);
+
+        if (!student) {
+            return res.status(404).render("error", {
+                title: "Student Not Found",
+                error: "Student Not Found",
+                message: `No student found with admission number: ${adm_no}`
+            });
+        }
+
+        // Mock gallery data
+        const uploads = [
+            {
+                url: "/images/placeholder.jpg",
+                note: "School event participation",
+                public_id: "gallery_1"
+            },
+            {
+                url: "/images/placeholder.jpg",
+                note: "Academic award ceremony",
+                public_id: "gallery_2"
+            },
+            {
+                url: "/images/placeholder.jpg",
+                note: "Sports day achievement",
+                public_id: "gallery_3"
+            }
+        ];
+
+        res.render("gallery", {
+            title: `Gallery - ${student["Full Name"]} | Daisy Portal`,
+            student: student,
+            uploads: uploads
+        });
+    } catch (error) {
+        console.error("Error loading gallery:", error);
+        res.status(500).render("error", {
+            title: "Server Error",
+            error: "Server Error",
+            message: "Unable to load student gallery"
+        });
+    }
+});
+
+// GET /students/:adm_no/results — Student results
+router.get("/:adm_no/results", async (req, res) => {
+    try {
+        const adm_no = req.params.adm_no;
+        const students = await readCSV("students.csv");
+        const student = students.find((s) => s["Admission Number"] === adm_no);
+
+        if (!student) {
+            return res.status(404).render("error", {
+                title: "Student Not Found",
+                error: "Student Not Found",
+                message: `No student found with admission number: ${adm_no}`
+            });
+        }
+
+        // Mock results data
+        const results = [
+            { subject: "Mathematics", score: "85", grade: "A" },
+            { subject: "English", score: "78", grade: "B" },
+            { subject: "Science", score: "92", grade: "A" },
+            { subject: "Social Studies", score: "81", grade: "B" },
+            { subject: "Kiswahili", score: "76", grade: "B" },
+            { subject: "CRE", score: "88", grade: "A" }
+        ];
+
+        // Mock result images/documents
+        const result_images = [
+            {
+                url: "/images/placeholder.jpg",
+                note: "Term 1 2024 Results",
+                public_id: "result_1"
+            },
+            {
+                url: "/images/placeholder.jpg",
+                note: "Mid-term Exams",
+                public_id: "result_2"
+            }
+        ];
+
+        res.render("results", {
+            title: `Results - ${student["Full Name"]} | Daisy Portal`,
+            student: student,
+            results: results,
+            result_images: result_images
+        });
+    } catch (error) {
+        console.error("Error loading results:", error);
+        res.status(500).render("error", {
+            title: "Server Error",
+            error: "Server Error",
+            message: "Unable to load student results"
+        });
+    }
+});
+
+// GET /students/:adm_no/letters — Student letters
+router.get("/:adm_no/letters", async (req, res) => {
+    try {
+        const adm_no = req.params.adm_no;
+        const students = await readCSV("students.csv");
+        const student = students.find((s) => s["Admission Number"] === adm_no);
+
+        if (!student) {
+            return res.status(404).render("error", {
+                title: "Student Not Found",
+                error: "Student Not Found",
+                message: `No student found with admission number: ${adm_no}`
+            });
+        }
+
+        // Mock letters data
+        const letters = [
+            {
+                url: "/images/placeholder.jpg",
+                note: "Letter to Sponsor - January 2024",
+                public_id: "letter_1"
+            },
+            {
+                url: "/images/placeholder.jpg",
+                note: "Thank You Letter - December 2023",
+                public_id: "letter_2"
+            },
+            {
+                url: "/images/placeholder.jpg",
+                note: "Progress Update - September 2023",
+                public_id: "letter_3"
+            }
+        ];
+
+        res.render("letters", {
+            title: `Letters - ${student["Full Name"]} | Daisy Portal`,
+            student: student,
+            letters: letters
+        });
+    } catch (error) {
+        console.error("Error loading letters:", error);
+        res.status(500).render("error", {
+            title: "Server Error",
+            error: "Server Error",
+            message: "Unable to load student letters"
+        });
+    }
+});
+
+export default router;

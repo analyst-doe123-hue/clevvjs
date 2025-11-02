@@ -1,0 +1,245 @@
+<%- include('partials/head', {title: 'Welcome | Daisy Sponsored Students Portal' , activePage: 'home' }) %>
+    <%- include('partials/header') %>
+        <div class="container-fluid">
+            <!-- Enhanced Hero Section with Background Slider -->
+            <section class="hero-section">
+                <!-- Background Image Slider -->
+                <div class="hero-background-slider">
+                    <div class="background-slides">
+                        <div class="background-slide" style="background-image: url('/images/slide1.jpg')"></div>
+                        <div class="background-slide" style="background-image: url('/images/slide2.jpg')"></div>
+                        <div class="background-slide" style="background-image: url('/images/slide3.jpg')"></div>
+                        <div class="background-slide" style="background-image: url('/images/slide4.jpg')"></div>
+                    </div>
+                </div>
+
+                <div class="container text-center">
+                    <img src="/images/daisy_logo.png" class="logo" alt="Daisy Sponsorship Program Logo">
+                    <h1>Welcome to Daisy Sponsored Students Portal</h1>
+                    <p class="lead">Connecting sponsors with talented students across different departments</p>
+                    <div class="hero-card">
+                        <p><i class="fas fa-hand-holding-heart"></i> Click on a department below to search students by
+                            sponsorship group</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Enhanced Image Slider Section -->
+            <section class="slider-section">
+                <div class="container">
+                    <div class="slider-container">
+                        <div class="slider">
+                            <div class="slides" id="slides">
+                                <div class="slide">
+                                    <img src="/images/slide1.jpg" alt="Empowering Education" loading="lazy">
+                                    <div class="caption">
+                                        <i class="fas fa-quote-left"></i>
+                                        Empowering Education Through Sponsorship
+                                        <i class="fas fa-quote-right"></i>
+                                    </div>
+                                </div>
+                                <div class="slide">
+                                    <img src="/images/slide2.jpg" alt="Creating Opportunities" loading="lazy">
+                                    <div class="caption">
+                                        <i class="fas fa-quote-left"></i>
+                                        Creating Smiles and Opportunities
+                                        <i class="fas fa-quote-right"></i>
+                                    </div>
+                                </div>
+                                <div class="slide">
+                                    <img src="/images/slide3.jpg" alt="Making a Difference" loading="lazy">
+                                    <div class="caption">
+                                        <i class="fas fa-quote-left"></i>
+                                        Together We Make a Difference
+                                        <i class="fas fa-quote-right"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slider-controls">
+                                <button class="slider-btn prev-btn" id="prevBtn">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <button class="slider-btn next-btn" id="nextBtn">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                            <div class="indicators" id="indicators"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Enhanced Department Buttons Section -->
+            <section class="departments-section">
+                <div class="container">
+                    <div class="text-center">
+                        <h2>Sponsorship Departments</h2>
+                        <p class="subtitle">Choose a department to explore sponsored students</p>
+                    </div>
+
+                    <div class="department-buttons">
+                        <a href="/departments?department=Germans" class="btn-department">
+                            <i class="fas fa-users"></i>
+                            Germans
+                        </a>
+                        <a href="/departments?department=Italians" class="btn-department">
+                            <i class="fas fa-graduation-cap"></i>
+                            Italians
+                        </a>
+                        <a href="/departments?department=Education for Generation" class="btn-department">
+                            <i class="fas fa-book"></i>
+                            Education for Generation
+                        </a>
+                        <a href="/departments?department=Warmhearted Group" class="btn-department">
+                            <i class="fas fa-heart"></i>
+                            Warmhearted Group
+                        </a>
+                        <a href="/departments?department=Assisted Group" class="btn-department">
+                            <i class="fas fa-hands-helping"></i>
+                            Assisted Group
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Enhanced Stats Section -->
+            <section class="stats-section">
+                <div class="container">
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <i class="fas fa-users"></i>
+                            <h3>200+</h3>
+                            <p>Students Sponsored</p>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-graduation-cap"></i>
+                            <h3>5+</h3>
+                            <p>Academic Departments</p>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-hand-holding-heart"></i>
+                            <h3>50+</h3>
+                            <p>Dedicated Sponsors</p>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-trophy"></i>
+                            <h3>10+</h3>
+                            <p>Years of Service</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Social Media Sidebar -->
+        <div class="social-sidebar">
+            <a href="https://m.me/kombamwiko" target="_blank" class="social-icon facebook" title="Messenger">
+                <i class="fab fa-facebook-messenger"></i>
+            </a>
+            <a href="https://instagram.com/gaylordvedelndenga" target="_blank" class="social-icon instagram"
+                title="Instagram">
+                <i class="fab fa-instagram"></i>
+            </a>
+            <a href="https://wa.me/+254752607371" target="_blank" class="social-icon whatsapp" title="WhatsApp">
+                <i class="fab fa-whatsapp"></i>
+            </a>
+            <a href="https://youtube.com/@daisy_students" target="_blank" class="social-icon youtube" title="YouTube">
+                <i class="fab fa-youtube"></i>
+            </a>
+        </div>
+
+        <!-- Scroll to Top Button -->
+        <button id="scrollTopBtn" class="scroll-top-btn" title="Go to top">
+            <i class="fas fa-chevron-up"></i>
+        </button>
+
+        <script>
+            // Enhanced Slider functionality
+            let currentSlide = 0;
+            const slides = document.querySelectorAll('.slide');
+            const indicatorsContainer = document.getElementById('indicators');
+            const slideInterval = 5000;
+            let slideTimer;
+
+            // Create indicators
+            function createIndicators() {
+                indicatorsContainer.innerHTML = '';
+                slides.forEach((_, index) => {
+                    const indicator = document.createElement('div');
+                    indicator.className = `indicator ${index === 0 ? 'active' : ''}`;
+                    indicator.addEventListener('click', () => goToSlide(index));
+                    indicatorsContainer.appendChild(indicator);
+                });
+            }
+
+            function goToSlide(slideIndex) {
+                currentSlide = slideIndex;
+                const slidesContainer = document.getElementById('slides');
+                slidesContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
+
+                // Update indicators
+                document.querySelectorAll('.indicator').forEach((indicator, index) => {
+                    indicator.classList.toggle('active', index === currentSlide);
+                });
+            }
+
+            function nextSlide() {
+                currentSlide = (currentSlide + 1) % slides.length;
+                goToSlide(currentSlide);
+            }
+
+            function prevSlide() {
+                currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+                goToSlide(currentSlide);
+            }
+
+            // Auto-advance slides
+            function startSlideTimer() {
+                slideTimer = setInterval(nextSlide, slideInterval);
+            }
+
+            // Pause on hover
+            const slider = document.querySelector('.slider');
+            slider.addEventListener('mouseenter', () => clearInterval(slideTimer));
+            slider.addEventListener('mouseleave', startSlideTimer);
+
+            // Button events
+            document.getElementById('nextBtn').addEventListener('click', () => {
+                clearInterval(slideTimer);
+                nextSlide();
+                startSlideTimer();
+            });
+
+            document.getElementById('prevBtn').addEventListener('click', () => {
+                clearInterval(slideTimer);
+                prevSlide();
+                startSlideTimer();
+            });
+
+            // Scroll to top functionality
+            const scrollTopBtn = document.getElementById('scrollTopBtn');
+
+            window.addEventListener('scroll', () => {
+                if (window.pageYOffset > 300) {
+                    scrollTopBtn.style.display = 'flex';
+                } else {
+                    scrollTopBtn.style.display = 'none';
+                }
+            });
+
+            scrollTopBtn.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+
+            // Initialize
+            createIndicators();
+            startSlideTimer();
+        </script>
+
+        <%- include('partials/footer') %>
+            </body>
+
+            </html>
