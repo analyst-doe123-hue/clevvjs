@@ -23,23 +23,23 @@
                         <%= student.Department || 'General Department' %>
                     </p>
 
-                    <!-- Action Buttons -->
-                    <div class="profile-actions mt-4">
-                         <div class="action-buttons">
-                            <a href="profile.ejs" class="btn btn-primary">
-                                <i class="fas fa-user"></i> Profile
-                            </a>
-                            <a href="gallery.ejs" class="btn btn-outline-primary">
-                                <i class="fas fa-images"></i> Gallery
-                            </a>
-                            <a href="results.ejs" class="btn btn-outline-primary">
-                                <i class="fas fa-chart-line"></i> Results
-                            </a>
-                            <a href="letter.ejs" class="btn btn-outline-primary">
-                                <i class="fas fa-envelope"></i> Letter
-                            </a>
-                        </div>
+                <!-- Action Buttons -->
+                <div class="profile-actions mt-4">
+                    <div class="action-buttons">
+                        <a href="/students/<%= student['Admission Number'] %>" class="btn btn-primary">
+                            <i class="fas fa-user"></i> Profile
+                        </a>
+                        <a href="/gallery/<%= student['Admission Number'] %>" class="btn btn-outline-primary">
+                            <i class="fas fa-images"></i> Gallery
+                        </a>
+                        <a href="/results/<%= student['Admission Number'] %>" class="btn btn-outline-primary">
+                            <i class="fas fa-chart-line"></i> Results
+                        </a>
+                        <a href="/letters/<%= student['Admission Number'] %>" class="btn btn-outline-primary">
+                            <i class="fas fa-envelope"></i> Letter
+                        </a>
                     </div>
+                </div>
 
                     <div class="profile-meta">
                         <div class="meta-item">

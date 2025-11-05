@@ -11,7 +11,7 @@ const upload = multer(); // we'll upload buffer to cloudinary
 // List images for a student (we'll assume CSV has a Gallery column with JSON array)
 router.get("/:adm_no", async (req, res) => {
     const adm_no = req.params.adm_no;
-    const students = await readCSV("edited_students.csv");
+    const students = await readCSV("students.csv");
     const student = students.find((s) => s["Admission Number"] === adm_no);
     if (!student) return res.status(404).send("Student not found");
 
@@ -20,39 +20,67 @@ router.get("/:adm_no", async (req, res) => {
     res.render("gallery", { title: `Gallery - ${student["Full Name"]}`, student, gallery });
 });
 
-// Upload image
-router.post("/upload/:adm_no", upload.single("image"), async (req, res) => {
+// Upload image - FIXED: Changed from single to array and updated field name
+router.post("/upload/:adm_no", upload.array("images"), async (req, res) => {
     const adm_no = req.params.adm_no;
-    const file = req.file;
-    if (!file) return res.status(400).send("No file uploaded");
+    const files = req.files; // Changed from req.file to req.files
+    const note = req.body.image_note; // Get the note from form data
 
-    // upload buffer to cloudinary
-    const stream = cloudinary.uploader.upload_stream({ folder: `students/${adm_no}` }, async (error, result) => {
-        if (error) {
-            console.error(error);
-            return res.status(500).send("Upload failed");
-        }
-        // save public_id and url to student's Gallery column (JSON array)
-        const students = await readCSV("edited_students.csv");
-        const studentIndex = students.findIndex((s) => s["Admission Number"] === adm_no);
-        if (studentIndex === -1) return res.status(404).send("Student not found");
-        const student = students[studentIndex];
-        let gallery = [];
-        try { gallery = student.Gallery ? JSON.parse(student.Gallery) : []; } catch (e) { gallery = []; }
-        gallery.push({ public_id: result.public_id, url: result.secure_url, created_at: result.created_at });
-        student.Gallery = JSON.stringify(gallery);
-        // rewrite CSV
-        const header = Object.keys(students[0] || student);
-        await writeCSV("students.csv", header, students);
-        res.redirect(`/gallery/${adm_no}`);
+    if (!files || files.length === 0) return res.status(400).send("No files uploaded");
+
+    const students = await readCSV("students.csv");
+    const studentIndex = students.findIndex((s) => s["Admission Number"] === adm_no);
+    if (studentIndex === -1) return res.status(404).send("Student not found");
+
+    const student = students[studentIndex];
+    let gallery = [];
+    try { gallery = student.Gallery ? JSON.parse(student.Gallery) : []; } catch (e) { gallery = []; }
+
+    // Process all uploaded files
+    const uploadPromises = files.map(file => {
+        return new Promise((resolve, reject) => {
+            const stream = cloudinary.uploader.upload_stream({
+                folder: `students/${adm_no}`
+            }, (error, result) => {
+                if (error) {
+                    console.error(error);
+                    reject(error);
+                } else {
+                    resolve({
+                        public_id: result.public_id,
+                        url: result.secure_url,
+                        filename: file.originalname,
+                        note: note || '', // Store the note with each image
+                        created_at: result.created_at
+                    });
+                }
+            });
+
+            const readable = new Readable();
+            readable._read = () => { };
+            readable.push(file.buffer);
+            readable.push(null);
+            readable.pipe(stream);
+        });
     });
 
-    // pipe buffer to stream
-    const readable = new Readable();
-    readable._read = () => { }; // _read is required but you can noop it
-    readable.push(file.buffer);
-    readable.push(null);
-    readable.pipe(stream);
+    try {
+        const uploadResults = await Promise.all(uploadPromises);
+
+        // Add all uploaded images to gallery
+        uploadResults.forEach(result => {
+            gallery.push(result);
+        });
+
+        student.Gallery = JSON.stringify(gallery);
+        const header = Object.keys(students[0] || student);
+        await writeCSV("students.csv", header, students);
+
+        res.redirect(`/gallery/${adm_no}`);
+    } catch (error) {
+        console.error("Upload failed:", error);
+        res.status(500).send("Upload failed");
+    }
 });
 
 // Delete image by public_id
