@@ -76,11 +76,20 @@ router.get("/:adm_no", async (req, res) => {
         const reports = getStudentReports(adm_no);
         const biography = getStudentBiography(adm_no);
 
+        // DEBUG: Log biography data
+        console.log('Student Admission No:', adm_no);
+        console.log('CSV Biography:', student["Small Biography"]);
+        console.log('Stored Biography:', biography);
+        console.log('Final Biography:', biography || student["Small Biography"] || "No biography available.");
+
+        // Use stored biography if available, otherwise fall back to CSV biography
+        const studentBiography = biography || student["Small Biography"] || "No biography available.";
+
         res.render("profile", {
             title: `${student["Full Name"]} - Profile | Daisy Portal`,
             student: {
                 ...student,
-                "Small Biography": biography || student["Small Biography"] || "No biography available."
+                "Small Biography": studentBiography
             },
             terms,
             reports
@@ -273,6 +282,85 @@ router.get("/:adm_no/generate-report", async (req, res) => {
         res.status(500).json({
             success: false,
             message: "Failed to generate report",
+            error: error.message
+        });
+    }
+});
+
+// ✅ NEW: Biography PDF Generation
+router.post("/:adm_no/generate-biography-pdf", async (req, res) => {
+    try {
+        const adm_no = req.params.adm_no;
+        const students = await readCSV("students.csv");
+        const student = students.find((s) => s["Admission Number"] === adm_no);
+        
+        if (!student) {
+            return res.status(404).json({ success: false, message: "Student not found" });
+        }
+
+        const { biography } = req.body;
+        const studentBiography = biography || student["Small Biography"] || "No biography available.";
+
+        // Generate biography PDF
+        const pdfBuffer = await generateBiographyPDF(student, studentBiography);
+
+        // Upload to Cloudinary
+        const uploadResult = await new Promise((resolve, reject) => {
+            const uploadStream = cloudinary.v2.uploader.upload_stream(
+                {
+                    resource_type: "raw",
+                    folder: "student_biographies",
+                    format: "pdf",
+                    public_id: `biography_${adm_no}_${Date.now()}`
+                },
+                (error, result) => {
+                    if (error) reject(error);
+                    else resolve(result);
+                }
+            );
+            uploadStream.end(pdfBuffer);
+        });
+
+        res.json({
+            success: true,
+            message: "Biography PDF generated successfully!",
+            downloadUrl: uploadResult.secure_url,
+            filename: `Biography_${student['Full Name'].replace(/\s+/g, '_')}.pdf`
+        });
+
+    } catch (error) {
+        console.error("Error generating biography PDF:", error);
+        res.status(500).json({
+            success: false,
+            message: "Failed to generate biography PDF",
+            error: error.message
+        });
+    }
+});
+
+// ✅ NEW: Download Report Route
+router.get("/:adm_no/download-report/:public_id", async (req, res) => {
+    try {
+        const { adm_no, public_id } = req.params;
+        
+        // Get report information
+        const reports = getStudentReports(adm_no);
+        const report = reports.find(r => r.PublicId === public_id || r.public_id === public_id);
+        
+        if (!report) {
+            return res.status(404).json({ success: false, message: "Report not found" });
+        }
+
+        // Redirect to Cloudinary download URL
+        const downloadUrl = `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/raw/upload/fl_attachment:${report.Filename || report.filename}/${public_id}`;
+        
+        res.redirect(downloadUrl);
+
+    } catch (error) {
+        console.error("Error downloading report:", error);
+        res.status(500).json({
+            success: false,
+            message: "Failed to download report",
             error: error.message
         });
     }
@@ -499,6 +587,128 @@ function drawSection(doc, title, content, options = {}) {
     
     doc.y += 15;
 }
+
+// NEW: Biography PDF Generation Function
+const generateBiographyPDF = (student, biography) => {
+    return new Promise((resolve, reject) => {
+        try {
+            const doc = new PDFDocument({
+                size: 'A4',
+                margins: { top: 50, bottom: 50, left: 50, right: 50 },
+                info: {
+                    Title: `Student Biography - ${student["Full Name"]}`,
+                    Author: 'Daisy Education Portal',
+                    Subject: `Student Biography - ${student["Full Name"]}`,
+                    Keywords: 'student, biography, education, profile'
+                }
+            });
+
+            const buffers = [];
+            doc.on('data', buffers.push.bind(buffers));
+            doc.on('end', () => {
+                const pdfData = Buffer.concat(buffers);
+                resolve(pdfData);
+            });
+
+            // Header
+            doc.fillColor(COLOR_TITLE)
+               .font(FONT_BOLD)
+               .fontSize(20)
+               .text('STUDENT BIOGRAPHY', 50, 50, { align: 'center' });
+
+            doc.fillColor(COLOR_MUTED)
+               .font(FONT_REGULAR)
+               .fontSize(10)
+               .text(`Generated on: ${new Date().toLocaleDateString('en-US', { 
+                   weekday: 'long', 
+                   year: 'numeric', 
+                   month: 'long', 
+                   day: 'numeric' 
+               })}`, 50, 75, { align: 'center' });
+
+            // Student Profile Box
+            const boxY = 110;
+            const boxHeight = 100;
+            
+            doc.rect(50, boxY, 500, boxHeight)
+               .fill(COLOR_BG)
+               .stroke(COLOR_STROKE);
+
+            const x = 65;
+            const y = boxY + 15;
+
+            // Profile Title
+            doc.fillColor(COLOR_TITLE)
+               .font(FONT_BOLD)
+               .fontSize(12)
+               .text('STUDENT PROFILE', x, y);
+
+            // Student Information
+            doc.fillColor(COLOR_TEXT)
+               .font(FONT_REGULAR)
+               .fontSize(10)
+               .text('Full Name:', x, y + 25)
+               .text('Admission No:', x, y + 40)
+               .text('Department:', x, y + 55)
+               .text('Educational Level:', x, y + 70);
+
+            doc.font(FONT_BOLD)
+               .text(C(student["Full Name"], "N/A"), x + 80, y + 25)
+               .text(C(student["Admission Number"], "N/A"), x + 80, y + 40)
+               .text(C(student["Department"], "N/A"), x + 80, y + 55)
+               .text(C(student["Educational Level"], "N/A"), x + 80, y + 70);
+
+            // Right side information
+            doc.font(FONT_REGULAR)
+               .text('Gender:', x + 250, y + 25)
+               .text('Sponsor Group:', x + 250, y + 40)
+               .text('Age:', x + 250, y + 55);
+
+            doc.font(FONT_BOLD)
+               .text(C(student["Gender"], "N/A"), x + 300, y + 25)
+               .text(C(student["Sponsorship Group"], "N/A"), x + 300, y + 40)
+               .text(C(student["Age"], "N/A"), x + 300, y + 55);
+
+            doc.y = boxY + boxHeight + 30;
+
+            // Biography Section
+            doc.fillColor(COLOR_TITLE)
+               .font(FONT_BOLD)
+               .fontSize(14)
+               .text('BIOGRAPHY', 50, doc.y, { underline: true });
+
+            doc.y += 25;
+
+            // Biography Content
+            doc.fillColor(COLOR_TEXT)
+               .font(FONT_REGULAR)
+               .fontSize(11)
+               .text(biography, 50, doc.y, {
+                   width: 500,
+                   align: 'justify',
+                   lineGap: 1.5
+               });
+
+            // Footer
+            const pageBottom = doc.page.height - 40;
+            doc.fillColor(COLOR_MUTED)
+               .font(FONT_REGULAR)
+               .fontSize(8)
+               .text(
+                   `Biography for ${student["Full Name"]} | Daisy Education Portal | ${new Date().toLocaleDateString()}`,
+                   doc.page.margins.left,
+                   pageBottom,
+                   { align: 'center', width: doc.page.width - doc.page.margins.left * 2 }
+               );
+
+            doc.end();
+
+        } catch (error) {
+            console.error('Biography PDF Generation Error:', error);
+            reject(error);
+        }
+    });
+};
 
 // Main Universal PDF Generation Function
 const generateUniversalReport = (student, term) => {

@@ -23,23 +23,23 @@
                         <%= student.Department || 'General Department' %>
                     </p>
 
-                <!-- Action Buttons -->
-                <div class="profile-actions mt-4">
-                    <div class="action-buttons">
-                        <a href="/students/<%= student['Admission Number'] %>" class="btn btn-primary">
-                            <i class="fas fa-user"></i> Profile
-                        </a>
-                        <a href="/gallery/<%= student['Admission Number'] %>" class="btn btn-outline-primary">
-                            <i class="fas fa-images"></i> Gallery
-                        </a>
-                        <a href="/results/<%= student['Admission Number'] %>" class="btn btn-outline-primary">
-                            <i class="fas fa-chart-line"></i> Results
-                        </a>
-                        <a href="/letters/<%= student['Admission Number'] %>" class="btn btn-outline-primary">
-                            <i class="fas fa-envelope"></i> Letter
-                        </a>
+                    <!-- Action Buttons -->
+                    <div class="profile-actions mt-4">
+                        <div class="action-buttons">
+                            <a href="/students/<%= student['Admission Number'] %>" class="btn btn-primary">
+                                <i class="fas fa-user"></i> Profile
+                            </a>
+                            <a href="/gallery/<%= student['Admission Number'] %>" class="btn btn-outline-primary">
+                                <i class="fas fa-images"></i> Gallery
+                            </a>
+                            <a href="/results/<%= student['Admission Number'] %>" class="btn btn-outline-primary">
+                                <i class="fas fa-chart-line"></i> Results
+                            </a>
+                            <a href="/letters/<%= student['Admission Number'] %>" class="btn btn-outline-primary">
+                                <i class="fas fa-envelope"></i> Letter
+                            </a>
+                        </div>
                     </div>
-                </div>
 
                     <div class="profile-meta">
                         <div class="meta-item">
@@ -112,6 +112,11 @@
                 <div class="enhanced-card">
                     <div class="card-header">
                         <h3><i class="fas fa-book-open"></i> Biography</h3>
+                        <div class="action-buttons">
+                            <button class="btn btn-outline-primary btn-sm" onclick="generateBiographyPDF()">
+                                <i class="fas fa-print"></i> Print Biography
+                            </button>
+                        </div>
                     </div>
                     <div class="card-body">
                         <div class="bio-editor">
@@ -149,293 +154,331 @@
                 </div>
 
                 <!-- Academic Terms Card -->
-<!-- Academic Terms Card -->
-<div class="enhanced-card">
-    <div class="card-header">
-        <h3><i class="fas fa-calendar-alt"></i> Academic Term Update</h3>
-    </div>
-    <div class="card-body">
-        <form id="term-form">
-            
-            <div class="form-section-header">
-                <h5><i class="fas fa-file-alt"></i> Report Details</h5>
-            </div>
-            <div class="row">
-                <div class="col-md-6 form-group mb-4">
-                    <label for="termName" class="form-label fw-bold">Report Period *</label>
-                    <input type="text" class="form-control" id="termName" name="termName" required
-                        placeholder="e.g., Term 3 2024, Semester 1 2025">
-                </div>
-                <div class="col-md-6 form-group mb-4">
-                    <label for="executiveSummary" class="form-label fw-bold">Executive Summary * (2-3 sentences)</label>
-                    <textarea class="form-control" id="executiveSummary" name="executiveSummary" rows="2" required
-                        placeholder="Coordinator's 2-3 sentence overview of the learner's term, progress, and key needs."></textarea>
-                </div>
-            </div>
-
-            <div class="form-section-header">
-                <h5><i class="fas fa-graduation-cap"></i> Academic Performance</h5>
-            </div>
-            <div class="form-group mb-4">
-                <label for="academicOverview" class="form-label fw-bold">Academic Narrative (Overview) *</label>
-                <textarea class="form-control" id="academicOverview" name="academicOverview" rows="3" required
-                    placeholder="Describe overall performance, attitude towards studies, teacher feedback, and exam results..."></textarea>
-            </div>
-            <div class="row">
-                <div class="col-md-6 form-group mb-4">
-                    <label for="academicGrade" class="form-label fw-bold">Overall Grade/Average</label>
-                    <input type="text" class="form-control" id="academicGrade" name="academicGrade" 
-                        placeholder="e.g., B+ (78%)">
-                </div>
-                <div class="col-md-6 form-group mb-4">
-                    <label for="academicRank" class="form-label fw-bold">Class Rank (if applicable)</label>
-                    <input type="text" class="form-control" id="academicRank" name="academicRank" 
-                        placeholder="e.g., 11th out of 45">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6 form-group mb-4">
-                    <label for="academicStrengths" class="form-label fw-bold">Key Strengths</label>
-                    <textarea class="form-control" id="academicStrengths" name="academicStrengths" rows="2"
-                        placeholder="e.g., Excels in Sciences, strong writer, very participatory..."></textarea>
-                </div>
-                <div class="col-md-6 form-group mb-4">
-                    <label for="academicChallenges" class="form-label fw-bold">Key Challenges</label>
-                    <textarea class="form-control" id="academicChallenges" name="academicChallenges" rows="2"
-                        placeholder="e.g., Struggling with Algebra, difficulty in public speaking..."></textarea>
-                </div>
-            </div>
-
-            <div class="form-section-header">
-                <h5><i class="fas fa-user-friends"></i> Personal & Home Environment</h5>
-            </div>
-            <div class="row">
-                <div class="col-md-6 form-group mb-4">
-                    <label for="personalSchool" class="form-label fw-bold">Personal & Social (At School)</label>
-                    <textarea class="form-control" id="personalSchool" name="personalSchool" rows="2"
-                        placeholder="Behavior, discipline, peer relationships, confidence, motivation..."></textarea>
-                </div>
-                <div class="col-md-6 form-group mb-4">
-                    <label for="personalExtra" class="form-label fw-bold">Extracurricular Involvement</label>
-                    <textarea class="form-control" id="personalExtra" name="personalExtra" rows="2"
-                        placeholder="Clubs, sports, leadership roles, special achievements..."></textarea>
-                </div>
-            </div>
-            <div class="form-group mb-4">
-                <label for="homeEnvironment" class="form-label fw-bold">Home Environment Update</label>
-                <textarea class="form-control" id="homeEnvironment" name="homeEnvironment" rows="2"
-                    placeholder="Guardian's feedback, home stability, health, any challenges..."></textarea>
-                <input type="text" class="form-control mt-2" id="homeUpdateMethod" name="homeUpdateMethod"
-                    placeholder="Update Method, e.g., Phone call with guardian (Oct 10), Home visit (Oct 12)...">
-            </div>
-            
-            <div class="form-section-header">
-                <h5><i class="fas fa-forward"></i> Next Term Planning</h5>
-            </div>
-            <div class="row">
-                <div class="col-md-6 form-group mb-4">
-                    <label for="nextTermDate" class="form-label fw-bold">Expected Return to School *</label>
-                    <input type="date" class="form-control" id="nextTermDate" name="nextTermDate" required>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6 form-group mb-4">
-                    <label for="goalsAcademic" class="form-label fw-bold">Academic Goals for Next Term</label>
-                    <textarea class="form-control" id="goalsAcademic" name="goalsAcademic" rows="2"
-                        placeholder="e.g., 1. Improve Math grade to B. 2. Be in the Top 10."></textarea>
-                </div>
-                <div class="col-md-6 form-group mb-4">
-                    <label for="goalsPersonal" class="form-label fw-bold">Personal Goals for Next Term</label>
-                    <textarea class="form-control" id="goalsPersonal" name="goalsPersonal" rows="2"
-                        placeholder="e.g., 1. Join the debate club. 2. Run for class prefect."></textarea>
-                </div>
-            </div>
-
-            <div class="form-section-header">
-                <h5><i class="fas fa-list-check"></i> Next Term Requirements & Needs</h5>
-            </div>
-            
-            <div class="input-group mb-3">
-                <span class="input-group-text">KES</span>
-                <input type="number" class="form-control" id="feesAmount" name="feesAmount" placeholder="Next Term School Fees Amount">
-                <span class="input-group-text">Due Date:</span>
-                <input type="date" class="form-control" id="feesDueDate" name="feesDueDate">
-            </div>
-
-            <div class="form-group mb-3">
-                 <label for="uniformNotes" class="form-label">School Uniform Needs</label>
-                <textarea class="form-control" id="uniformNotes" name="uniformNotes" rows="2" 
-                    placeholder="List required items, e.g., 2 shirts (Size M), 1 pair shoes (Size 8)."></textarea>
-            </div>
-            
-            <div class="form-group mb-3">
-                 <label for="bookList" class="form-label">Textbooks & Supplies Needs</label>
-                <textarea class="form-control" id="bookList" name="bookList" rows="2" 
-                    placeholder="List required books/materials, e.g., 'Form 3 Physics Guide', Scientific Calculator."></textarea>
-            </div>
-
-            <div class="form-group mb-3">
-                 <label for="transportNotes" class="form-label">Transport Needs</label>
-                <textarea class="form-control" id="transportNotes" name="transportNotes" rows="2" 
-                    placeholder="e.g., Requires monthly bus pass (KES 1500), or N/A (boarding)."></textarea>
-            </div>
-            
-            <div class="form-group mb-4">
-                 <label for="otherNeeds" class="form-label">Other Needs / General Needs Summary</label>
-                <textarea class="form-control" id="otherNeeds" name="otherNeeds" rows="2" 
-                    placeholder="e.g., Pocket money, personal items, or summary of all needs."></textarea>
-            </div>
-
-            <div class="form-section-header">
-                <h5><i class="fas fa-comment-dots"></i> Recommendations & Conclusion</h5>
-            </div>
-            <div class="row">
-                <div class="col-md-6 form-group mb-4">
-                    <label for="recommendAcademic" class="form-label fw-bold">Academic Recommendations</label>
-                    <textarea class="form-control" id="recommendAcademic" name="recommendAcademic" rows="2"
-                        placeholder="e.g., Recommend 2hrs/week Math tutoring."></textarea>
-                </div>
-                <div class="col-md-6 form-group mb-4">
-                    <label for="recommendMaterial" class="form-label fw-bold">Material/Personal Recommendations</label>
-                    <textarea class="form-control" id="recommendMaterial" name="recommendMaterial" rows="2"
-                        placeholder="e.g., Immediate purchase of new shoes is essential."></textarea>
-                </div>
-            </div>
-            <div class="form-group mb-4">
-                <label for="concludingRemark" class="form-label fw-bold">Concluding Remark *</label>
-                <textarea class="form-control" id="concludingRemark" name="concludingRemark" rows="2" required
-                    placeholder="Final positive, forward-looking statement from the coordinator."></textarea>
-            </div>
-
-            <button type="submit" class="btn btn-primary" id="term-submit-btn">
-                <i class="fas fa-plus-circle"></i> Submit Term Update
-            </button>
-        </form>
-    </div>
-</div>
-
-                        <!-- Display Recent Terms -->
-                        <% if (terms && terms.length> 0) { %>
-                            <div class="terms-list mt-4">
-                                <h5><i class="fas fa-history"></i> Recent Term Updates</h5>
-                                <% terms.slice(0, 3).forEach(term=> { %>
-                                    <div class="term-item <%= term === terms[0] ? 'latest-term' : '' %>">
-                                        <div class="term-header">
-                                            <div class="term-name">
-                                                <strong>
-                                                    <%= term.TermName || term['Term Name'] || 'Unnamed Term' %>
-                                                </strong>
-                                                <% if (term===terms[0]) { %>
-                                                    <span class="badge badge-primary">LATEST</span>
-                                                    <% } %>
-                                            </div>
-                                            <div class="term-date">
-                                                <%= term.Timestamp ? new
-                                                    Date(term.Timestamp).toLocaleDateString('en-US', { 
-                                                    year: 'numeric', 
-                                                    month: 'short', 
-                                                    day: 'numeric',
-                                                    hour: '2-digit', 
-                                                    minute: '2-digit' 
-                                                }) : 'Recent' %>
-                                            </div>
-                                        </div>
-                                        <% if (term.parsedDetails && term.parsedDetails.academicProgress) { %>
-                                            <div class="term-details">
-                                                <strong>Academic Progress:</strong>
-                                                <%= term.parsedDetails.academicProgress.substring(0, 100) %>...
-                                            </div>
-                                            <% } else if (term.TermDetails) { %>
-                                                <div class="term-details">
-                                                    <%= term.TermDetails.substring(0, 100) %>...
-                                                </div>
-                                                <% } %>
-                                    </div>
-                                    <% }) %>
-                            </div>
-                            <% } else { %>
-                                <div class="no-terms mt-4 text-center">
-                                    <i class="fas fa-calendar-plus text-muted mb-3" style="font-size: 2rem;"></i>
-                                    <p class="text-muted">No academic terms recorded yet.</p>
-                                    <p class="text-sm text-muted">Submit a term update to enable report generation</p>
-                                </div>
-                                <% } %>
-                    </div>
-                </div>
-
-                <!-- Report Generator Card -->
                 <div class="enhanced-card">
                     <div class="card-header">
-                        <h3><i class="fas fa-file-pdf"></i> Report Generator</h3>
-                        <% if (terms && terms.length> 0) { %>
-                            <span class="badge badge-info">Using: <%= terms[0].TermName || terms[0]['Term Name'] %></span>
-                            <% } %>
+                        <h3><i class="fas fa-calendar-alt"></i> Academic Term Update</h3>
                     </div>
                     <div class="card-body">
-                        <div class="report-section">
-                            <div class="report-icon">
-                                <i class="fas fa-file-pdf"></i>
+                        <form id="term-form">
+
+                            <div class="form-section-header">
+                                <h5><i class="fas fa-file-alt"></i> Report Details</h5>
                             </div>
-                            <h4>Generate Comprehensive Report</h4>
-                            <p class="text-muted">
-                                Professional PDF report based on latest term data and student information
-                            </p>
-
-                            <% if (terms && terms.length> 0) { %>
-                                <div class="report-actions">
-                                    <button class="btn btn-primary" id="generate-report-btn">
-                                        <i class="fas fa-file-pdf"></i> Generate Report
-                                    </button>
+                            <div class="row">
+                                <div class="col-md-6 form-group mb-4">
+                                    <label for="termName" class="form-label fw-bold">Report Period *</label>
+                                    <input type="text" class="form-control" id="termName" name="termName" required
+                                        placeholder="e.g., Term 3 2024, Semester 1 2025">
                                 </div>
-
-                                <div class="report-info mt-3">
-                                    <small class="text-info">
-                                        <i class="fas fa-info-circle"></i>
-                                        Report will include: Academic progress, personal development, home environment, and next term planning
-                                    </small>
+                                <div class="col-md-6 form-group mb-4">
+                                    <label for="executiveSummary" class="form-label fw-bold">Executive Summary * (2-3
+                                        sentences)</label>
+                                    <textarea class="form-control" id="executiveSummary" name="executiveSummary"
+                                        rows="2" required
+                                        placeholder="Coordinator's 2-3 sentence overview of the learner's term, progress, and key needs."></textarea>
                                 </div>
-                                <% } else { %>
-                                    <div class="alert alert-warning">
-                                        <i class="fas fa-exclamation-triangle"></i>
-                                        Add at least one academic term to enable report generation
+                            </div>
+
+                            <div class="form-section-header">
+                                <h5><i class="fas fa-graduation-cap"></i> Academic Performance</h5>
+                            </div>
+                            <div class="form-group mb-4">
+                                <label for="academicOverview" class="form-label fw-bold">Academic Narrative (Overview)
+                                    *</label>
+                                <textarea class="form-control" id="academicOverview" name="academicOverview" rows="3"
+                                    required
+                                    placeholder="Describe overall performance, attitude towards studies, teacher feedback, and exam results..."></textarea>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 form-group mb-4">
+                                    <label for="academicGrade" class="form-label fw-bold">Overall Grade/Average</label>
+                                    <input type="text" class="form-control" id="academicGrade" name="academicGrade"
+                                        placeholder="e.g., B+ (78%)">
+                                </div>
+                                <div class="col-md-6 form-group mb-4">
+                                    <label for="academicRank" class="form-label fw-bold">Class Rank (if
+                                        applicable)</label>
+                                    <input type="text" class="form-control" id="academicRank" name="academicRank"
+                                        placeholder="e.g., 11th out of 45">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 form-group mb-4">
+                                    <label for="academicStrengths" class="form-label fw-bold">Key Strengths</label>
+                                    <textarea class="form-control" id="academicStrengths" name="academicStrengths"
+                                        rows="2"
+                                        placeholder="e.g., Excels in Sciences, strong writer, very participatory..."></textarea>
+                                </div>
+                                <div class="col-md-6 form-group mb-4">
+                                    <label for="academicChallenges" class="form-label fw-bold">Key Challenges</label>
+                                    <textarea class="form-control" id="academicChallenges" name="academicChallenges"
+                                        rows="2"
+                                        placeholder="e.g., Struggling with Algebra, difficulty in public speaking..."></textarea>
+                                </div>
+                            </div>
+
+                            <div class="form-section-header">
+                                <h5><i class="fas fa-user-friends"></i> Personal & Home Environment</h5>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 form-group mb-4">
+                                    <label for="personalSchool" class="form-label fw-bold">Personal & Social (At
+                                        School)</label>
+                                    <textarea class="form-control" id="personalSchool" name="personalSchool" rows="2"
+                                        placeholder="Behavior, discipline, peer relationships, confidence, motivation..."></textarea>
+                                </div>
+                                <div class="col-md-6 form-group mb-4">
+                                    <label for="personalExtra" class="form-label fw-bold">Extracurricular
+                                        Involvement</label>
+                                    <textarea class="form-control" id="personalExtra" name="personalExtra" rows="2"
+                                        placeholder="Clubs, sports, leadership roles, special achievements..."></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group mb-4">
+                                <label for="homeEnvironment" class="form-label fw-bold">Home Environment Update</label>
+                                <textarea class="form-control" id="homeEnvironment" name="homeEnvironment" rows="2"
+                                    placeholder="Guardian's feedback, home stability, health, any challenges..."></textarea>
+                                <input type="text" class="form-control mt-2" id="homeUpdateMethod"
+                                    name="homeUpdateMethod"
+                                    placeholder="Update Method, e.g., Phone call with guardian (Oct 10), Home visit (Oct 12)...">
+                            </div>
+
+                            <div class="form-section-header">
+                                <h5><i class="fas fa-forward"></i> Next Term Planning</h5>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 form-group mb-4">
+                                    <label for="nextTermDate" class="form-label fw-bold">Expected Return to School
+                                        *</label>
+                                    <input type="date" class="form-control" id="nextTermDate" name="nextTermDate"
+                                        required>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 form-group mb-4">
+                                    <label for="goalsAcademic" class="form-label fw-bold">Academic Goals for Next
+                                        Term</label>
+                                    <textarea class="form-control" id="goalsAcademic" name="goalsAcademic" rows="2"
+                                        placeholder="e.g., 1. Improve Math grade to B. 2. Be in the Top 10."></textarea>
+                                </div>
+                                <div class="col-md-6 form-group mb-4">
+                                    <label for="goalsPersonal" class="form-label fw-bold">Personal Goals for Next
+                                        Term</label>
+                                    <textarea class="form-control" id="goalsPersonal" name="goalsPersonal" rows="2"
+                                        placeholder="e.g., 1. Join the debate club. 2. Run for class prefect."></textarea>
+                                </div>
+                            </div>
+
+                            <div class="form-section-header">
+                                <h5><i class="fas fa-list-check"></i> Next Term Requirements & Needs</h5>
+                            </div>
+
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">KES</span>
+                                <input type="number" class="form-control" id="feesAmount" name="feesAmount"
+                                    placeholder="Next Term School Fees Amount">
+                                <span class="input-group-text">Due Date:</span>
+                                <input type="date" class="form-control" id="feesDueDate" name="feesDueDate">
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="uniformNotes" class="form-label">School Uniform Needs</label>
+                                <textarea class="form-control" id="uniformNotes" name="uniformNotes" rows="2"
+                                    placeholder="List required items, e.g., 2 shirts (Size M), 1 pair shoes (Size 8)."></textarea>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="bookList" class="form-label">Textbooks & Supplies Needs</label>
+                                <textarea class="form-control" id="bookList" name="bookList" rows="2"
+                                    placeholder="List required books/materials, e.g., 'Form 3 Physics Guide', Scientific Calculator."></textarea>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="transportNotes" class="form-label">Transport Needs</label>
+                                <textarea class="form-control" id="transportNotes" name="transportNotes" rows="2"
+                                    placeholder="e.g., Requires monthly bus pass (KES 1500), or N/A (boarding)."></textarea>
+                            </div>
+
+                            <div class="form-group mb-4">
+                                <label for="otherNeeds" class="form-label">Other Needs / General Needs Summary</label>
+                                <textarea class="form-control" id="otherNeeds" name="otherNeeds" rows="2"
+                                    placeholder="e.g., Pocket money, personal items, or summary of all needs."></textarea>
+                            </div>
+
+                            <div class="form-section-header">
+                                <h5><i class="fas fa-comment-dots"></i> Recommendations & Conclusion</h5>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 form-group mb-4">
+                                    <label for="recommendAcademic" class="form-label fw-bold">Academic
+                                        Recommendations</label>
+                                    <textarea class="form-control" id="recommendAcademic" name="recommendAcademic"
+                                        rows="2" placeholder="e.g., Recommend 2hrs/week Math tutoring."></textarea>
+                                </div>
+                                <div class="col-md-6 form-group mb-4">
+                                    <label for="recommendMaterial" class="form-label fw-bold">Material/Personal
+                                        Recommendations</label>
+                                    <textarea class="form-control" id="recommendMaterial" name="recommendMaterial"
+                                        rows="2"
+                                        placeholder="e.g., Immediate purchase of new shoes is essential."></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group mb-4">
+                                <label for="concludingRemark" class="form-label fw-bold">Concluding Remark *</label>
+                                <textarea class="form-control" id="concludingRemark" name="concludingRemark" rows="2"
+                                    required
+                                    placeholder="Final positive, forward-looking statement from the coordinator."></textarea>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary" id="term-submit-btn">
+                                <i class="fas fa-plus-circle"></i> Submit Term Update
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Display Recent Terms -->
+                <% if (terms && terms.length> 0) { %>
+                    <div class="terms-list mt-4">
+                        <h5><i class="fas fa-history"></i> Recent Term Updates</h5>
+                        <% terms.slice(0, 3).forEach(term=> { %>
+                            <div class="term-item <%= term === terms[0] ? 'latest-term' : '' %>">
+                                <div class="term-header">
+                                    <div class="term-name">
+                                        <strong>
+                                            <%= term.TermName || term['Term Name'] || 'Unnamed Term' %>
+                                        </strong>
+                                        <% if (term===terms[0]) { %>
+                                            <span class="badge badge-primary">LATEST</span>
+                                            <% } %>
+                                    </div>
+                                    <div class="term-date">
+                                        <%= term.Timestamp ? new Date(term.Timestamp).toLocaleDateString('en-US', {
+                                            year: 'numeric' , month: 'short' , day: 'numeric' , hour: '2-digit' ,
+                                            minute: '2-digit' }) : 'Recent' %>
+                                    </div>
+                                </div>
+                                <% if (term.ExecutiveSummary) { %>
+                                    <div class="term-details">
+                                        <strong>Executive Summary:</strong>
+                                        <%= term.ExecutiveSummary.substring(0, 100) %>...
                                     </div>
                                     <% } %>
+                            </div>
+                            <% }) %>
+                    </div>
+                    <% } else { %>
+                        <div class="no-terms mt-4 text-center">
+                            <i class="fas fa-calendar-plus text-muted mb-3" style="font-size: 2rem;"></i>
+                            <p class="text-muted">No academic terms recorded yet.</p>
+                            <p class="text-sm text-muted">Submit a term update to enable report generation</p>
+                        </div>
+                        <% } %>
+            </div>
 
-                                        <!-- Generated Reports -->
-                                        <% if (reports && reports.length> 0) { %>
-                                            <div class="mt-4">
-                                                <h5><i class="fas fa-file-download"></i> Generated Reports</h5>
-                                                <% reports.slice(0, 3).forEach(report=> { %>
-                                                    <div class="term-item">
-                                                        <div class="term-header">
-                                                            <div class="term-name">
-                                                                <strong>
-                                                                    <%= report.filename || 'Student Report' %>
-                                                                </strong>
-                                                            </div>
-                                                            <div class="term-date">
-                                                                <%= report.CreatedAt ? new
-                                                                    Date(report.CreatedAt).toLocaleDateString() :
-                                                                    report.created_at ? new
-                                                                    Date(report.created_at).toLocaleDateString()
-                                                                    : 'Recently' %>
-                                                            </div>
+            <!-- Report Generator Card -->
+            <div class="enhanced-card">
+                <div class="card-header">
+                    <h3><i class="fas fa-file-pdf"></i> Report Generator</h3>
+                    <% if (terms && terms.length> 0) { %>
+                        <span class="badge badge-info">Using: <%= terms[0].TermName || terms[0]['Term Name'] %></span>
+                        <% } %>
+                </div>
+                <div class="card-body">
+                    <div class="report-section">
+                        <div class="report-icon">
+                            <i class="fas fa-file-pdf"></i>
+                        </div>
+                        <h4>Generate Comprehensive Report</h4>
+                        <p class="text-muted">
+                            Professional PDF report based on latest term data and student information
+                        </p>
+
+                        <% if (terms && terms.length> 0) { %>
+                            <div class="report-actions">
+                                <button class="btn btn-primary" id="generate-report-btn">
+                                    <i class="fas fa-file-pdf"></i> Generate Report
+                                </button>
+                            </div>
+
+                            <div class="report-info mt-3">
+                                <small class="text-info">
+                                    <i class="fas fa-info-circle"></i>
+                                    Report will include: Academic progress, personal development, home environment, and
+                                    next term planning
+                                </small>
+                            </div>
+                            <% } else { %>
+                                <div class="alert alert-warning">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    Add at least one academic term to enable report generation
+                                </div>
+                                <% } %>
+
+                                    <!-- Generated Reports -->
+                                    <% if (reports && reports.length> 0) { %>
+                                        <div class="mt-4">
+                                            <h5><i class="fas fa-file-download"></i> Generated Reports</h5>
+                                            <% reports.slice(0, 5).forEach(report=> { %>
+                                                <div class="term-item">
+                                                    <div class="term-header">
+                                                        <div class="term-name">
+                                                            <strong>
+                                                                <%= report.Filename || report.filename
+                                                                    || 'Student Report' %>
+                                                            </strong>
                                                         </div>
-                                                        <div class="action-buttons">
-                                                            <a href="/students/<%= student['Admission Number'] %>/download-report/<%= report.public_id || report.PublicId %>"
-                                                                class="btn btn-success btn-sm" target="_blank">
-                                                                <i class="fas fa-download"></i> Download PDF
-                                                            </a>
+                                                        <div class="term-date">
+                                                            <%= report.CreatedAt ? new
+                                                                Date(report.CreatedAt).toLocaleDateString() :
+                                                                report.created_at ? new
+                                                                Date(report.created_at).toLocaleDateString()
+                                                                : 'Recently' %>
                                                         </div>
                                                     </div>
-                                                    <% }) %>
-                                            </div>
-                                            <% } %>
-                        </div>
+                                                    <div class="action-buttons">
+                                                        <a href="<%= report.url || `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/raw/upload/${report.PublicId || report.public_id}` %>"
+                                                            class="btn btn-success btn-sm" target="_blank" download>
+                                                            <i class="fas fa-download"></i> Download PDF
+                                                        </a>
+                                                        <a href="<%= report.url || `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/raw/upload/${report.PublicId || report.public_id}` %>"
+                                                            class="btn btn-outline-primary btn-sm" target="_blank">
+                                                            <i class="fas fa-eye"></i> View
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <% }) %>
+                                        </div>
+                                        <% } %>
                     </div>
                 </div>
             </div>
+            </div>
         </main>
+
+    <!-- Biography Modal -->
+    <div id="bioModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Full Biography - <%= student['Full Name'] %>
+                </h3>
+                <span class="close" onclick="closeBioModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="biography-content">
+                    <p id="modalBioContent">
+                        <%= student['Small Biography'] || 'No biography available for this student.' %>
+                    </p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="generateBiographyPDF()">
+                    <i class="fas fa-print"></i> Print Biography
+                </button>
+                <button class="btn btn-outline" onclick="closeBioModal()">Close</button>
+            </div>
+        </div>
+    </div>
 
         <!-- Success/Error Toast Notification -->
         <div id="toast" class="toast"></div>
@@ -443,26 +486,6 @@
         <script>
             // Set minimum date to today for next term date
             document.getElementById('nextTermDate').min = new Date().toISOString().split('T')[0];
-
-            // Interactive needs functionality
-            document.addEventListener('DOMContentLoaded', function() {
-                // Get all checkboxes
-                const checkboxes = document.querySelectorAll('input[name="nextTermNeeds[]"]');
-                
-                // Add event listeners to each checkbox
-                checkboxes.forEach(checkbox => {
-                    checkbox.addEventListener('change', function() {
-                        const infoId = this.id.replace('need', '').toLowerCase() + 'Info';
-                        const infoElement = document.getElementById(infoId);
-                        
-                        if (this.checked) {
-                            infoElement.classList.add('show');
-                        } else {
-                            infoElement.classList.remove('show');
-                        }
-                    });
-                });
-            });
 
             // Toast notification system
             function showToast(message, type = 'success') {
@@ -525,57 +548,105 @@
                 }
             }
 
+            /// Enhanced Modal functionality
+                function openBioModal() {
+                    const modal = document.getElementById('bioModal');
+                    const modalBioContent = document.getElementById('modalBioContent');
+
+                    // Get the current biography text
+                    const currentBio = document.querySelector('.biography').textContent;
+
+                    // Set the modal content
+                    modalBioContent.textContent = currentBio || 'No biography available for this student.';
+
+                    // Show the modal
+                    modal.style.display = 'block';
+
+                    // Add escape key listener
+                    document.addEventListener('keydown', handleEscapeKey);
+                }
+
+                function closeBioModal() {
+                    const modal = document.getElementById('bioModal');
+                    modal.style.display = 'none';
+
+                    // Remove escape key listener
+                    document.removeEventListener('keydown', handleEscapeKey);
+                }
+
+                function handleEscapeKey(event) {
+                    if (event.key === 'Escape') {
+                        closeBioModal();
+                    }
+                }
+
+                // Close modal when clicking outside
+                window.onclick = function (event) {
+                    const modal = document.getElementById('bioModal');
+                    if (event.target === modal) {
+                        closeBioModal();
+                    }
+                }
+
+            // Biography PDF Generation
+            async function generateBiographyPDF() {
+                try {
+                    const response = await fetch(`/students/<%= student['Admission Number'] %>/generate-biography-pdf`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            biography: `<%= student['Small Biography'] %>`
+                        })
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        showToast('Biography PDF generated successfully!', 'success');
+                        window.open(result.downloadUrl, '_blank');
+                    } else {
+                        showToast(result.message || 'Failed to generate biography PDF', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error generating biography PDF:', error);
+                    showToast('Error generating biography PDF', 'error');
+                }
+            }
+
             // Enhanced term form submission handling
             document.getElementById('term-form').addEventListener('submit', async function (e) {
                 e.preventDefault();
                 const submitBtn = document.getElementById('term-submit-btn');
                 const originalText = submitBtn.innerHTML;
 
-                // Collect all form data including checkboxes
+                // Collect all form data
                 const formData = {
                     termName: document.getElementById('termName').value,
-                    academicProgress: document.getElementById('academicProgress').value,
-                    personalDevelopment: document.getElementById('personalDevelopment').value,
+                    executiveSummary: document.getElementById('executiveSummary').value,
+                    academicOverview: document.getElementById('academicOverview').value,
+                    academicGrade: document.getElementById('academicGrade').value,
+                    academicRank: document.getElementById('academicRank').value,
+                    academicStrengths: document.getElementById('academicStrengths').value,
+                    academicChallenges: document.getElementById('academicChallenges').value,
+                    personalSchool: document.getElementById('personalSchool').value,
+                    personalExtra: document.getElementById('personalExtra').value,
                     homeEnvironment: document.getElementById('homeEnvironment').value,
+                    homeUpdateMethod: document.getElementById('homeUpdateMethod').value,
                     nextTermDate: document.getElementById('nextTermDate').value,
-                    nextTermNeeds: Array.from(document.querySelectorAll('input[name="nextTermNeeds[]"]:checked')).map(cb => cb.value),
-                    nextTermNeedsDetails: document.getElementById('nextTermNeedsDetails').value,
-                    supportNeeds: document.getElementById('supportNeeds').value,
-                    goalsNextTerm: document.getElementById('goalsNextTerm').value
+                    goalsAcademic: document.getElementById('goalsAcademic').value,
+                    goalsPersonal: document.getElementById('goalsPersonal').value,
+                    feesAmount: document.getElementById('feesAmount').value,
+                    feesDueDate: document.getElementById('feesDueDate').value,
+                    uniformNotes: document.getElementById('uniformNotes').value,
+                    bookList: document.getElementById('bookList').value,
+                    transportNotes: document.getElementById('transportNotes').value,
+                    otherNeeds: document.getElementById('otherNeeds').value,
+                    recommendAcademic: document.getElementById('recommendAcademic').value,
+                    recommendMaterial: document.getElementById('recommendMaterial').value,
+                    concludingRemark: document.getElementById('concludingRemark').value
                 };
-
-                // Collect additional info from expanded sections
-                if (document.getElementById('needSchoolFees').checked) {
-                    formData.schoolFeesDetails = {
-                        amount: document.getElementById('feesAmount').value,
-                        deadline: document.getElementById('feesDeadline').value,
-                        notes: document.getElementById('feesNotes').value
-                    };
-                }
-                
-                if (document.getElementById('needUniform').checked) {
-                    formData.uniformDetails = {
-                        items: Array.from(document.getElementById('uniformItems').selectedOptions).map(opt => opt.value),
-                        size: document.getElementById('uniformSize').value,
-                        notes: document.getElementById('uniformNotes').value
-                    };
-                }
-                
-                if (document.getElementById('needBooks').checked) {
-                    formData.booksDetails = {
-                        bookList: document.getElementById('bookList').value,
-                        bookstore: document.getElementById('bookstore').value,
-                        notes: document.getElementById('booksNotes').value
-                    };
-                }
-                
-                if (document.getElementById('needTransport').checked) {
-                    formData.transportDetails = {
-                        type: document.getElementById('transportType').value,
-                        cost: document.getElementById('transportCost').value,
-                        notes: document.getElementById('transportNotes').value
-                    };
-                }
 
                 // Show loading state
                 submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting Update...';
@@ -595,12 +666,7 @@
                     if (result.success) {
                         showToast('Term update submitted successfully!', 'success');
                         this.reset();
-                        
-                        // Hide all additional info sections
-                        document.querySelectorAll('.additional-info').forEach(section => {
-                            section.classList.remove('show');
-                        });
-                        
+
                         // Reload page to show updated terms
                         setTimeout(() => location.reload(), 1500);
                     } else {
@@ -654,9 +720,12 @@
                 }
             });
 
-            function openBioModal() {
-                // Implement modal functionality if needed
-                alert('Full biography view would open here');
+            // Close modal when clicking outside
+            window.onclick = function (event) {
+                const modal = document.getElementById('bioModal');
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
             }
         </script>
 
@@ -684,72 +753,6 @@
             .form-section-header h5 i {
                 color: var(--maroon-primary);
                 margin-right: 10px;
-            }
-
-            .needs-checklist {
-                background: var(--maroon-bg);
-                padding: 15px;
-                border-radius: 5px;
-                border-left: 4px solid var(--maroon-primary);
-                margin-bottom: 15px;
-            }
-
-            .form-check-inline {
-                margin-right: 20px;
-            }
-
-            .form-check-input:checked {
-                background-color: var(--maroon-primary);
-                border-color: var(--maroon-primary);
-            }
-
-            .additional-info {
-                display: none;
-                margin-top: 15px;
-                padding: 15px;
-                background-color: var(--maroon-bg);
-                border-radius: 5px;
-                border-left: 4px solid var(--maroon-primary);
-                animation: fadeIn 0.3s ease-in-out;
-            }
-
-            .additional-info.show {
-                display: block;
-            }
-
-            @keyframes fadeIn {
-                from { opacity: 0; transform: translateY(-10px); }
-                to { opacity: 1; transform: translateY(0); }
-            }
-
-            .fee-breakdown {
-                background: white;
-                border-radius: 5px;
-                padding: 15px;
-                margin-top: 15px;
-                border: 1px solid #e9ecef;
-            }
-
-            .fee-item {
-                display: flex;
-                justify-content: space-between;
-                padding: 8px 0;
-                border-bottom: 1px solid #f1f1f1;
-            }
-
-            .fee-item:last-child {
-                border-bottom: none;
-                font-weight: bold;
-                color: var(--maroon-dark);
-            }
-
-            .fee-total {
-                font-size: 1.1em;
-                font-weight: bold;
-                color: var(--maroon-dark);
-                margin-top: 10px;
-                padding-top: 10px;
-                border-top: 2px solid var(--maroon-primary);
             }
 
             .btn-primary {
@@ -843,60 +846,201 @@
                 border-top: 1px solid #e9ecef;
                 padding-top: 20px;
             }
+
             .profile-actions {
-    margin: 20px 0;
+                margin: 20px 0;
+            }
+
+            .profile-actions .action-buttons {
+                display: flex;
+                gap: 12px;
+                flex-wrap: wrap;
+            }
+
+            .profile-actions .btn {
+                padding: 10px 20px;
+                border-radius: 8px;
+                font-weight: 600;
+                transition: all 0.3s ease;
+                border: 2px solid var(--maroon-primary);
+                color: var(--maroon-primary);
+                background: transparent;
+                text-decoration: none;
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .profile-actions .btn:hover {
+                background: var(--maroon-primary);
+                color: white;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(128, 0, 0, 0.3);
+            }
+
+            /* Modal Styles */
+            /* Enhanced Modal Styles */
+.modal {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    animation: fadeIn 0.3s ease-in-out;
 }
 
-.profile-actions .action-buttons {
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 0;
+    border-radius: 12px;
+    width: 80%;
+    max-width: 700px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    animation: slideIn 0.3s ease-out;
+}
+
+.modal-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid #e9ecef;
     display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-}
-
-.profile-actions .btn {
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    border: 2px solid var(--maroon-primary);
-    color: var(--maroon-primary);
-    background: transparent;
-    text-decoration: none;
-    display: inline-flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 8px;
-}
-
-.profile-actions .btn:hover {
-    background: var(--maroon-primary);
+    background: linear-gradient(135deg, var(--maroon-primary), var(--maroon-dark));
     color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(128, 0, 0, 0.3);
+    border-radius: 12px 12px 0 0;
 }
 
-/* Responsive design for buttons */
+.modal-header h3 {
+    margin: 0;
+    color: white;
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+.close {
+    color: white;
+    float: right;
+    font-size: 32px;
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.3s ease;
+}
+
+.close:hover {
+    color: #f8f9fa;
+    transform: scale(1.1);
+}
+
+.modal-body {
+    padding: 24px;
+    max-height: 60vh;
+    overflow-y: auto;
+    background: #fff;
+}
+
+.biography-content {
+    line-height: 1.8;
+    font-size: 1.1rem;
+    color: #495057;
+}
+
+.biography-content p {
+    margin: 0;
+    white-space: pre-line;
+}
+
+.modal-footer {
+    padding: 20px 24px;
+    border-top: 1px solid #e9ecef;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    background: #f8f9fa;
+    border-radius: 0 0 12px 12px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { 
+        opacity: 0;
+        transform: translateY(-50px) scale(0.9);
+    }
+    to { 
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Scrollbar styling for modal */
+.modal-body::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+    background: var(--maroon-light);
+    border-radius: 4px;
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover {
+    background: var(--maroon-primary);
+}
+
+/* Responsive design */
 @media (max-width: 768px) {
-    .profile-actions .action-buttons {
-        justify-content: center;
+    .modal-content {
+        width: 95%;
+        margin: 10% auto;
     }
     
-    .profile-actions .btn {
-        flex: 1;
-        min-width: 120px;
-        justify-content: center;
-        text-align: center;
+    .modal-header {
+        padding: 16px 20px;
+    }
+    
+    .modal-body {
+        padding: 20px;
+        max-height: 70vh;
+    }
+    
+    .modal-footer {
+        padding: 16px 20px;
+        flex-direction: column;
+    }
+    
+    .modal-footer .btn {
+        width: 100%;
     }
 }
 
 @media (max-width: 480px) {
-    .profile-actions .action-buttons {
-        flex-direction: column;
+    .modal-content {
+        width: 98%;
+        margin: 5% auto;
     }
     
-    .profile-actions .btn {
-        width: 100%;
+    .modal-header h3 {
+        font-size: 1.2rem;
+    }
+    
+    .biography-content {
+        font-size: 1rem;
+        line-height: 1.6;
     }
 }
+               
         </style>
 
         <%- include('partials/footer') %>

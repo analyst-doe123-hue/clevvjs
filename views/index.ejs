@@ -1,7 +1,7 @@
 <%- include('partials/head', {title: 'Welcome | Daisy Sponsored Students Portal' , activePage: 'home' }) %>
     <%- include('partials/header') %>
         <div class="container-fluid">
-            <!-- Enhanced Hero Section with Background Slider -->
+            <!-- Enhanced Hero Section with Text Carousel -->
             <section class="hero-section">
                 <!-- Background Image Slider -->
                 <div class="hero-background-slider">
@@ -15,89 +15,162 @@
 
                 <div class="container text-center">
                     <img src="/images/daisy_logo.png" class="logo" alt="Daisy Sponsorship Program Logo">
-                    <h1>Welcome to Daisy Sponsored Students Portal</h1>
-                    <p class="lead">Connecting sponsors with talented students across different departments</p>
-                    <div class="hero-card">
-                        <p><i class="fas fa-hand-holding-heart"></i> Click on a department below to search students by
-                            sponsorship group</p>
-                    </div>
-                </div>
-            </section>
+                    <h1>Daisy Sponsored Students Portal</h1>
+                    <p class="lead">Connecting Sponsors with Talented Students</p>
 
-            <!-- Enhanced Image Slider Section -->
-            <section class="slider-section">
-                <div class="container">
-                    <div class="slider-container">
-                        <div class="slider">
-                            <div class="slides" id="slides">
-                                <div class="slide">
-                                    <img src="/images/slide1.jpg" alt="Empowering Education" loading="lazy">
-                                    <div class="caption">
-                                        <i class="fas fa-quote-left"></i>
-                                        Empowering Education Through Sponsorship
-                                        <i class="fas fa-quote-right"></i>
-                                    </div>
-                                </div>
-                                <div class="slide">
-                                    <img src="/images/slide2.jpg" alt="Creating Opportunities" loading="lazy">
-                                    <div class="caption">
-                                        <i class="fas fa-quote-left"></i>
-                                        Creating Smiles and Opportunities
-                                        <i class="fas fa-quote-right"></i>
-                                    </div>
-                                </div>
-                                <div class="slide">
-                                    <img src="/images/slide3.jpg" alt="Making a Difference" loading="lazy">
-                                    <div class="caption">
-                                        <i class="fas fa-quote-left"></i>
-                                        Together We Make a Difference
-                                        <i class="fas fa-quote-right"></i>
-                                    </div>
-                                </div>
+                    <!-- Text Carousel -->
+                    <div class="text-carousel-container">
+                        <div class="text-carousel">
+                            <div class="carousel-slide active">
+                                <p>"Empowering education through dedicated sponsorship programs"</p>
                             </div>
-                            <div class="slider-controls">
-                                <button class="slider-btn prev-btn" id="prevBtn">
-                                    <i class="fas fa-chevron-left"></i>
-                                </button>
-                                <button class="slider-btn next-btn" id="nextBtn">
-                                    <i class="fas fa-chevron-right"></i>
-                                </button>
+                            <div class="carousel-slide">
+                                <p>"Supporting child education and development since 2013"</p>
                             </div>
-                            <div class="indicators" id="indicators"></div>
+                            <div class="carousel-slide">
+                                <p>"Transforming lives through quality education opportunities"</p>
+                            </div>
+                            <div class="carousel-slide">
+                                <p>"Building futures, one student at a time"</p>
+                            </div>
+                        </div>
+                        <div class="carousel-indicators">
+                            <span class="indicator active"></span>
+                            <span class="indicator"></span>
+                            <span class="indicator"></span>
+                            <span class="indicator"></span>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- Enhanced Department Buttons Section -->
-            <section class="departments-section">
+            <!-- Public Portal Information Cards -->
+            <section class="portal-info-section">
                 <div class="container">
                     <div class="text-center">
-                        <h2>Sponsorship Departments</h2>
-                        <p class="subtitle">Choose a department to explore sponsored students</p>
+                        <h2>Welcome to Our Student Portal</h2>
+                        <p class="subtitle">Explore our programs and sponsored students</p>
                     </div>
 
-                    <div class="department-buttons">
-                        <a href="/departments?department=Germans" class="btn-department">
-                            <i class="fas fa-users"></i>
-                            Germans
+                    <div class="info-cards-grid">
+                        <div class="info-card">
+                            <div class="card-icon">
+                                <i class="fas fa-graduation-cap"></i>
+                            </div>
+                            <h3>Student Success</h3>
+                            <p>Discover inspiring stories of our sponsored students and their academic achievements</p>
+                            <a href="/success" class="card-link">View Stories <i class="fas fa-arrow-right"></i></a>
+                        </div>
+
+                        <div class="info-card">
+                            <div class="card-icon">
+                                <i class="fas fa-hand-holding-heart"></i>
+                            </div>
+                            <h3>Sponsorship Programs</h3>
+                            <p>Learn about our various sponsorship initiatives and how they support education</p>
+                            <a href="/about" class="card-link">Learn More <i class="fas fa-arrow-right"></i></a>
+                        </div>
+
+                        <div class="info-card">
+                            <div class="card-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <h3>Our Team</h3>
+                            <p>Meet the dedicated team behind the Daisy Sponsorship Program</p>
+                            <a href="/team" class="card-link">Meet Team <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Compact Admin Login Section -->
+            <section class="compact-admin-section" id="adminLoginSection">
+                <div class="container">
+                    <div class="section-header">
+                        <h2>Departmental Access</h2>
+                        <p>Authorized personnel login for departmental management</p>
+                    </div>
+
+                    <div class="compact-login-card">
+                        <div class="login-header">
+                            <i class="fas fa-lock"></i>
+                            <h3>Admin Portal</h3>
+                        </div>
+
+                        <form id="adminLoginForm" class="compact-login-form">
+                            <div class="form-group">
+                                <input type="text" id="adminUsername" placeholder="Username" required>
+                            </div>
+
+                            <div class="form-group">
+                                <input type="password" id="adminPassword" placeholder="Password" required>
+                            </div>
+
+                            <button type="submit" class="btn-login-compact">
+                                <i class="fas fa-sign-in-alt"></i> Login
+                            </button>
+
+                            <div class="login-error compact" id="loginErrorMessage">
+                                <i class="fas fa-exclamation-circle"></i> Invalid credentials
+                            </div>
+                        </form>
+
+                        <div class="demo-hint">
+                            <p>Demo: <strong>admin.clevicks</strong> / <strong>India@2025</strong></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Enhanced Department Buttons Section with Minimal Design -->
+            <section class="departments-section" id="departmentsSection" style="display: none;">
+                <div class="container">
+                    <div class="text-center">
+                        <h2>Departmental Management</h2>
+                        <p class="subtitle">Access department-specific student sponsorship data</p>
+                        <div class="admin-info">
+                            <span class="admin-badge">
+                                <i class="fas fa-user-shield"></i> <span id="adminDisplayName">admin.clevicks</span>
+                            </span>
+                            <button class="btn-logout" id="logoutBtn">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Department Buttons with Direct Links - Minimal Design -->
+                    <div class="department-buttons-minimal">
+                        <a href="/departments/germans" class="btn-department-minimal">
+                            <span class="dept-name">Germans Department</span>
+                            <span class="dept-desc">German sponsorship program students</span>
                         </a>
-                        <a href="/departments?department=Italians" class="btn-department">
-                            <i class="fas fa-graduation-cap"></i>
-                            Italians
+                        <a href="/departments/italians" class="btn-department-minimal">
+                            <span class="dept-name">Italians Department</span>
+                            <span class="dept-desc">Italian sponsorship program students</span>
                         </a>
-                        <a href="/departments?department=Education for Generation" class="btn-department">
-                            <i class="fas fa-book"></i>
-                            Education for Generation
+                        <a href="/departments/education" class="btn-department-minimal">
+                            <span class="dept-name">Education for Generation</span>
+                            <span class="dept-desc">Long-term educational support program</span>
                         </a>
-                        <a href="/departments?department=Warmhearted Group" class="btn-department">
-                            <i class="fas fa-heart"></i>
-                            Warmhearted Group
+                        <a href="/departments/warmhearted" class="btn-department-minimal">
+                            <span class="dept-name">Warmhearted Group</span>
+                            <span class="dept-desc">Compassionate sponsorship initiative</span>
                         </a>
-                        <a href="/departments?department=Assisted Group" class="btn-department">
-                            <i class="fas fa-hands-helping"></i>
-                            Assisted Group
+                        <a href="/departments/assisted" class="btn-department-minimal">
+                            <span class="dept-name">Assisted Group</span>
+                            <span class="dept-desc">Additional support and mentorship program</span>
                         </a>
+                    </div>
+
+                    <!-- Compact Access Log -->
+                    <div class="compact-access-log">
+                        <h3><i class="fas fa-history"></i> Recent Activity</h3>
+                        <div id="accessLogEntries">
+                            <div class="log-entry-compact">
+                                <span class="log-time">[<span id="currentTime"></span>]</span>
+                                System ready for authentication
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -109,7 +182,7 @@
                         <div class="stat-item">
                             <i class="fas fa-users"></i>
                             <h3>200+</h3>
-                            <p>Students Sponsored</p>
+                            <p>Sponsored Students</p>
                         </div>
                         <div class="stat-item">
                             <i class="fas fa-graduation-cap"></i>
@@ -119,12 +192,12 @@
                         <div class="stat-item">
                             <i class="fas fa-hand-holding-heart"></i>
                             <h3>50+</h3>
-                            <p>Dedicated Sponsors</p>
+                            <p>Active Sponsors</p>
                         </div>
                         <div class="stat-item">
                             <i class="fas fa-trophy"></i>
                             <h3>10+</h3>
-                            <p>Years of Service</p>
+                            <p>Years of Excellence</p>
                         </div>
                     </div>
                 </div>
@@ -153,67 +226,742 @@
             <i class="fas fa-chevron-up"></i>
         </button>
 
+        <style>
+            /* Enhanced Hero Section with Text Carousel */
+            .hero-section {
+                background: linear-gradient(135deg, var(--maroon), var(--dark-maroon));
+                color: var(--white);
+                padding: 4rem 0 3rem;
+                text-align: center;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .hero-background-slider {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 0;
+            }
+
+            .background-slides {
+                display: flex;
+                width: 400%;
+                height: 100%;
+                animation: backgroundSlide 25s infinite;
+            }
+
+            .background-slide {
+                flex: 1;
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+                opacity: 0.3;
+                filter: brightness(0.7) blur(1px);
+            }
+
+            @keyframes backgroundSlide {
+
+                0%,
+                20% {
+                    transform: translateX(0);
+                }
+
+                25%,
+                45% {
+                    transform: translateX(-25%);
+                }
+
+                50%,
+                70% {
+                    transform: translateX(-50%);
+                }
+
+                75%,
+                95% {
+                    transform: translateX(-75%);
+                }
+
+                100% {
+                    transform: translateX(0);
+                }
+            }
+
+            .hero-section .container {
+                position: relative;
+                z-index: 2;
+            }
+
+            .hero-section h1 {
+                font-size: 2.8rem;
+                font-weight: 700;
+                margin-bottom: 1rem;
+                text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+            }
+
+            .hero-section .lead {
+                font-size: 1.3rem;
+                margin-bottom: 2rem;
+                font-weight: 300;
+                opacity: 0.95;
+            }
+
+            .logo {
+                max-height: 120px;
+                margin-bottom: 2rem;
+                filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.4));
+            }
+
+            /* Text Carousel Styles */
+            .text-carousel-container {
+                max-width: 800px;
+                margin: 0 auto;
+                position: relative;
+            }
+
+            .text-carousel {
+                position: relative;
+                height: 80px;
+                overflow: hidden;
+                margin-bottom: 1.5rem;
+            }
+
+            .carousel-slide {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                opacity: 0;
+                transform: translateY(20px);
+                transition: all 0.5s ease-in-out;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .carousel-slide.active {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            .carousel-slide p {
+                font-size: 1.4rem;
+                font-weight: 500;
+                font-style: italic;
+                color: var(--light-gold);
+                text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+                margin: 0;
+                text-align: center;
+            }
+
+            .carousel-indicators {
+                display: flex;
+                justify-content: center;
+                gap: 10px;
+            }
+
+            .carousel-indicators .indicator {
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.4);
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+
+            .carousel-indicators .indicator.active {
+                background: var(--gold);
+                transform: scale(1.2);
+            }
+
+            /* Portal Information Cards */
+            .portal-info-section {
+                padding: 3rem 0;
+                background: var(--white);
+            }
+
+            .portal-info-section h2 {
+                color: var(--maroon);
+                font-size: 2.2rem;
+                margin-bottom: 1rem;
+            }
+
+            .portal-info-section .subtitle {
+                color: var(--text-muted);
+                font-size: 1.1rem;
+                margin-bottom: 2.5rem;
+            }
+
+            .info-cards-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 2rem;
+                margin-top: 2rem;
+            }
+
+            .info-card {
+                background: var(--white);
+                border-radius: 12px;
+                padding: 2rem;
+                text-align: center;
+                box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+                border: 1px solid #f0f0f0;
+                transition: all 0.3s ease;
+            }
+
+            .info-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 25px rgba(128, 0, 0, 0.15);
+            }
+
+            .card-icon {
+                width: 70px;
+                height: 70px;
+                background: linear-gradient(135deg, var(--maroon), var(--light-maroon));
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto 1.5rem;
+            }
+
+            .card-icon i {
+                font-size: 1.8rem;
+                color: white;
+            }
+
+            .info-card h3 {
+                color: var(--maroon);
+                margin-bottom: 1rem;
+                font-size: 1.3rem;
+            }
+
+            .info-card p {
+                color: var(--text-muted);
+                margin-bottom: 1.5rem;
+                line-height: 1.6;
+            }
+
+            .card-link {
+                color: var(--maroon);
+                text-decoration: none;
+                font-weight: 600;
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+                transition: all 0.3s ease;
+            }
+
+            .card-link:hover {
+                color: var(--dark-maroon);
+                gap: 0.8rem;
+            }
+
+            /* Compact Admin Login Section */
+            .compact-admin-section {
+                padding: 2.5rem 0;
+                background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            }
+
+            .section-header {
+                text-align: center;
+                margin-bottom: 2rem;
+            }
+
+            .section-header h2 {
+                color: var(--maroon);
+                font-size: 1.8rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .section-header p {
+                color: var(--text-muted);
+                font-size: 1rem;
+            }
+
+            .compact-login-card {
+                background: var(--white);
+                border-radius: 12px;
+                padding: 2rem;
+                max-width: 400px;
+                margin: 0 auto;
+                box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+                border: 1px solid #e9ecef;
+            }
+
+            .login-header {
+                text-align: center;
+                margin-bottom: 1.5rem;
+            }
+
+            .login-header i {
+                font-size: 2rem;
+                color: var(--maroon);
+                margin-bottom: 0.8rem;
+            }
+
+            .login-header h3 {
+                color: var(--maroon);
+                font-size: 1.4rem;
+                margin: 0;
+            }
+
+            .compact-login-form .form-group {
+                margin-bottom: 1.2rem;
+            }
+
+            .compact-login-form input {
+                width: 100%;
+                padding: 0.8rem 1rem;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                font-size: 0.95rem;
+                transition: all 0.3s ease;
+            }
+
+            .compact-login-form input:focus {
+                outline: none;
+                border-color: var(--maroon);
+                box-shadow: 0 0 0 2px rgba(128, 0, 0, 0.1);
+            }
+
+            .btn-login-compact {
+                width: 100%;
+                background: linear-gradient(135deg, var(--maroon), var(--light-maroon));
+                color: white;
+                border: none;
+                padding: 0.8rem;
+                border-radius: 8px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                margin-top: 0.5rem;
+            }
+
+            .btn-login-compact:hover {
+                background: linear-gradient(135deg, var(--light-maroon), var(--maroon));
+                transform: translateY(-1px);
+            }
+
+            .login-error.compact {
+                background: #ffe6e6;
+                color: #d63031;
+                padding: 0.7rem;
+                border-radius: 6px;
+                margin-top: 1rem;
+                font-size: 0.9rem;
+                display: none;
+                text-align: center;
+            }
+
+            .demo-hint {
+                margin-top: 1.5rem;
+                padding: 1rem;
+                background: #f8f9fa;
+                border-radius: 6px;
+                text-align: center;
+                font-size: 0.85rem;
+                color: var(--text-muted);
+            }
+
+            .demo-hint strong {
+                color: var(--maroon);
+            }
+
+            /* Minimal Department Buttons Styles */
+            .department-buttons-minimal {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 1rem;
+                margin: 2.5rem 0;
+            }
+
+            .btn-department-minimal {
+                display: flex;
+                flex-direction: column;
+                text-decoration: none;
+                color: var(--maroon);
+                background: var(--white);
+                padding: 1.5rem;
+                border-radius: 10px;
+                transition: all 0.3s ease;
+                border: 2px solid #e9ecef;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+                position: relative;
+                overflow: hidden;
+            }
+
+            .btn-department-minimal::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(128, 0, 0, 0.05), transparent);
+                transition: left 0.5s;
+            }
+
+            .btn-department-minimal:hover::before {
+                left: 100%;
+            }
+
+            .btn-department-minimal:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 4px 15px rgba(128, 0, 0, 0.15);
+                border-color: var(--maroon);
+                background: var(--white);
+                color: var(--dark-maroon);
+                text-decoration: none;
+            }
+
+            .dept-name {
+                font-weight: 600;
+                font-size: 1.1rem;
+                margin-bottom: 0.5rem;
+                color: var(--maroon);
+            }
+
+            .dept-desc {
+                font-weight: 400;
+                color: var(--text-muted);
+                font-size: 0.9rem;
+                line-height: 1.4;
+            }
+
+            /* Compact Access Log */
+            .compact-access-log {
+                margin-top: 2.5rem;
+                padding: 1.5rem;
+                background: var(--white);
+                border-radius: 10px;
+                box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+            }
+
+            .compact-access-log h3 {
+                color: var(--maroon);
+                margin-bottom: 1.2rem;
+                font-size: 1.2rem;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            #accessLogEntries {
+                max-height: 180px;
+                overflow-y: auto;
+                padding: 1rem;
+                background: #f8f9fa;
+                border-radius: 8px;
+                border: 1px solid #e9ecef;
+            }
+
+            .log-entry-compact {
+                padding: 0.6rem 0;
+                border-bottom: 1px solid #e9ecef;
+                font-size: 0.85rem;
+                display: flex;
+                align-items: center;
+            }
+
+            .log-entry-compact:last-child {
+                border-bottom: none;
+            }
+
+            .log-time {
+                color: var(--maroon);
+                font-weight: 600;
+                margin-right: 0.8rem;
+                font-family: 'Courier New', monospace;
+                font-size: 0.8rem;
+                min-width: 85px;
+            }
+
+            /* Enhanced Stats Section */
+            .stats-section {
+                padding: 3rem 0;
+                background: linear-gradient(135deg, rgba(128, 0, 0, 0.03), rgba(255, 215, 0, 0.05));
+            }
+
+            .stats-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 1.5rem;
+                text-align: center;
+            }
+
+            .stat-item {
+                padding: 2rem 1rem;
+                background: var(--white);
+                border-radius: 12px;
+                box-shadow: 0 5px 15px rgba(128, 0, 0, 0.08);
+                transition: transform 0.3s ease;
+            }
+
+            .stat-item:hover {
+                transform: translateY(-5px);
+            }
+
+            .stat-item i {
+                font-size: 2.5rem;
+                color: var(--maroon);
+                margin-bottom: 1rem;
+            }
+
+            .stat-item h3 {
+                font-size: 2.2rem;
+                font-weight: 700;
+                color: var(--maroon);
+                margin-bottom: 0.5rem;
+            }
+
+            .stat-item p {
+                color: var(--text-muted);
+                font-weight: 600;
+                font-size: 0.95rem;
+            }
+
+            /* Admin Info Styles */
+            .admin-info {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 1rem;
+                margin-bottom: 1.5rem;
+                flex-wrap: wrap;
+            }
+
+            .admin-badge {
+                background: linear-gradient(135deg, var(--success), #20c997);
+                color: white;
+                padding: 0.5rem 1rem;
+                border-radius: 20px;
+                font-size: 0.9rem;
+                font-weight: 600;
+            }
+
+            .btn-logout {
+                background: var(--danger);
+                color: white;
+                border: none;
+                padding: 0.5rem 1rem;
+                border-radius: 6px;
+                cursor: pointer;
+                font-size: 0.9rem;
+                font-weight: 600;
+                transition: background 0.3s ease;
+            }
+
+            .btn-logout:hover {
+                background: #c0392b;
+            }
+
+            /* Responsive Design */
+            @media (max-width: 768px) {
+                .hero-section h1 {
+                    font-size: 2.2rem;
+                }
+
+                .hero-section .lead {
+                    font-size: 1.1rem;
+                }
+
+                .carousel-slide p {
+                    font-size: 1.2rem;
+                }
+
+                .info-cards-grid {
+                    grid-template-columns: 1fr;
+                }
+
+                .department-buttons-minimal {
+                    grid-template-columns: 1fr;
+                    gap: 0.8rem;
+                }
+
+                .btn-department-minimal {
+                    padding: 1.2rem;
+                }
+
+                .dept-name {
+                    font-size: 1rem;
+                }
+
+                .dept-desc {
+                    font-size: 0.85rem;
+                }
+
+                .compact-login-card {
+                    margin: 0 1rem;
+                }
+
+                .stats-grid {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+            }
+
+            @media (max-width: 480px) {
+                .hero-section {
+                    padding: 3rem 0 2rem;
+                }
+
+                .hero-section h1 {
+                    font-size: 1.8rem;
+                }
+
+                .carousel-slide p {
+                    font-size: 1.1rem;
+                }
+
+                .info-card {
+                    padding: 1.5rem;
+                }
+
+                .btn-department-minimal {
+                    padding: 1rem;
+                }
+
+                .stats-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
+        </style>
+
         <script>
-            // Enhanced Slider functionality
-            let currentSlide = 0;
-            const slides = document.querySelectorAll('.slide');
-            const indicatorsContainer = document.getElementById('indicators');
-            const slideInterval = 5000;
-            let slideTimer;
+            // Text Carousel Functionality
+            document.addEventListener('DOMContentLoaded', function () {
+                // Text Carousel
+                const carouselSlides = document.querySelectorAll('.carousel-slide');
+                const indicators = document.querySelectorAll('.carousel-indicators .indicator');
+                let currentSlide = 0;
 
-            // Create indicators
-            function createIndicators() {
-                indicatorsContainer.innerHTML = '';
-                slides.forEach((_, index) => {
-                    const indicator = document.createElement('div');
-                    indicator.className = `indicator ${index === 0 ? 'active' : ''}`;
-                    indicator.addEventListener('click', () => goToSlide(index));
-                    indicatorsContainer.appendChild(indicator);
+                function showSlide(index) {
+                    // Hide all slides
+                    carouselSlides.forEach(slide => {
+                        slide.classList.remove('active');
+                    });
+                    indicators.forEach(indicator => {
+                        indicator.classList.remove('active');
+                    });
+
+                    // Show current slide
+                    carouselSlides[index].classList.add('active');
+                    indicators[index].classList.add('active');
+
+                    currentSlide = index;
+                }
+
+                function nextSlide() {
+                    let nextIndex = (currentSlide + 1) % carouselSlides.length;
+                    showSlide(nextIndex);
+                }
+
+                // Auto-advance carousel
+                setInterval(nextSlide, 4000);
+
+                // Add click events to indicators
+                indicators.forEach((indicator, index) => {
+                    indicator.addEventListener('click', () => {
+                        showSlide(index);
+                    });
                 });
-            }
 
-            function goToSlide(slideIndex) {
-                currentSlide = slideIndex;
-                const slidesContainer = document.getElementById('slides');
-                slidesContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
+                // Admin Login Functionality
+                const loginForm = document.getElementById('adminLoginForm');
+                const loginSection = document.getElementById('adminLoginSection');
+                const departmentsSection = document.getElementById('departmentsSection');
+                const errorMessage = document.getElementById('loginErrorMessage');
+                const logoutBtn = document.getElementById('logoutBtn');
+                const accessLog = document.getElementById('accessLogEntries');
+                const currentTimeElement = document.getElementById('currentTime');
+                const adminDisplayName = document.getElementById('adminDisplayName');
 
-                // Update indicators
-                document.querySelectorAll('.indicator').forEach((indicator, index) => {
-                    indicator.classList.toggle('active', index === currentSlide);
+                // Update current time
+                function updateCurrentTime() {
+                    const now = new Date();
+                    const timeString = now.toLocaleTimeString();
+                    if (currentTimeElement) {
+                        currentTimeElement.textContent = timeString;
+                    }
+                }
+
+                setInterval(updateCurrentTime, 1000);
+                updateCurrentTime();
+
+                // System credentials
+                const validUsername = 'admin.clevicks';
+                const validPassword = 'India@2025';
+
+                // Check if user is already logged in (from sessionStorage)
+                if (sessionStorage.getItem('adminLoggedIn') === 'true') {
+                    loginSection.style.display = 'none';
+                    departmentsSection.style.display = 'block';
+                    addLogEntry('Session restored - Welcome back');
+                }
+
+                // Handle login form submission
+                loginForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+
+                    const username = document.getElementById('adminUsername').value;
+                    const password = document.getElementById('adminPassword').value;
+
+                    if (username === validUsername && password === validPassword) {
+                        // Successful login
+                        loginSection.style.display = 'none';
+                        departmentsSection.style.display = 'block';
+                        errorMessage.style.display = 'none';
+                        adminDisplayName.textContent = username;
+
+                        // Store login state
+                        sessionStorage.setItem('adminLoggedIn', 'true');
+                        sessionStorage.setItem('adminUsername', username);
+
+                        // Add login entry to log
+                        addLogEntry(`Authentication successful - Welcome ${username}`);
+                    } else {
+                        // Failed login
+                        errorMessage.style.display = 'block';
+                        document.getElementById('adminPassword').value = '';
+                        addLogEntry('Failed authentication attempt');
+                    }
                 });
-            }
 
-            function nextSlide() {
-                currentSlide = (currentSlide + 1) % slides.length;
-                goToSlide(currentSlide);
-            }
+                // Handle logout
+                logoutBtn.addEventListener('click', function () {
+                    departmentsSection.style.display = 'none';
+                    loginSection.style.display = 'block';
+                    document.getElementById('adminUsername').value = '';
+                    document.getElementById('adminPassword').value = '';
 
-            function prevSlide() {
-                currentSlide = (currentSlide - 1 + slides.length) % slides.length;
-                goToSlide(currentSlide);
-            }
+                    // Clear login state
+                    sessionStorage.removeItem('adminLoggedIn');
+                    sessionStorage.removeItem('adminUsername');
 
-            // Auto-advance slides
-            function startSlideTimer() {
-                slideTimer = setInterval(nextSlide, slideInterval);
-            }
+                    // Add logout entry to log
+                    addLogEntry('Session terminated - User logged out');
+                });
 
-            // Pause on hover
-            const slider = document.querySelector('.slider');
-            slider.addEventListener('mouseenter', () => clearInterval(slideTimer));
-            slider.addEventListener('mouseleave', startSlideTimer);
+                // Function to add entries to the access log
+                function addLogEntry(message) {
+                    const now = new Date();
+                    const timeString = now.toLocaleTimeString();
 
-            // Button events
-            document.getElementById('nextBtn').addEventListener('click', () => {
-                clearInterval(slideTimer);
-                nextSlide();
-                startSlideTimer();
-            });
+                    const logEntry = document.createElement('div');
+                    logEntry.className = 'log-entry-compact';
+                    logEntry.innerHTML = `<span class="log-time">[${timeString}]</span> ${message}`;
 
-            document.getElementById('prevBtn').addEventListener('click', () => {
-                clearInterval(slideTimer);
-                prevSlide();
-                startSlideTimer();
+                    accessLog.appendChild(logEntry);
+
+                    // Scroll to the bottom of the log
+                    accessLog.scrollTop = accessLog.scrollHeight;
+                }
+
+                // Auto-focus on username field
+                document.getElementById('adminUsername').focus();
             });
 
             // Scroll to top functionality
@@ -233,10 +981,6 @@
                     behavior: 'smooth'
                 });
             });
-
-            // Initialize
-            createIndicators();
-            startSlideTimer();
         </script>
 
         <%- include('partials/footer') %>
