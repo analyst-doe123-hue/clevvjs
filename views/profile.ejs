@@ -4,12 +4,13 @@
         <main class="container">
             <!-- Profile Header -->
             <section class="profile-header">
-                <div class="profile-photo">
+                <div class="profile-photo-square">
                     <% if (student.Photo && student.Photo !=='static/images/' ) { %>
                         <img src="<%= student.Photo.startsWith('static/') ? '/' + student.Photo : student.Photo %>"
-                            alt="<%= student['Full Name'] %>" onerror="this.src='/images/placeholder.jpg'">
+                            alt="<%= student['Full Name'] %>" class="square-photo"
+                            onerror="this.src='/images/placeholder.jpg'">
                         <% } else { %>
-                            <img src="/images/placeholder.jpg" alt="<%= student['Full Name'] %>">
+                            <img src="/images/placeholder.jpg" alt="<%= student['Full Name'] %>" class="square-photo">
                             <% } %>
                 </div>
                 <div class="profile-info">
@@ -38,6 +39,9 @@
                             <a href="/letters/<%= student['Admission Number'] %>" class="btn btn-outline-primary">
                                 <i class="fas fa-envelope"></i> Letter
                             </a>
+                            <a href="/departments" class="btn btn-outline btn-sm">
+                                <i class="fas fa-arrow-left me-2"></i>Back to Departments
+                            </a>
                         </div>
                     </div>
 
@@ -63,50 +67,6 @@
                     </div>
                 </div>
             </section>
-
-
-            <!-- Profile Details Grid -->
-            <div class="profile-grid">
-                <!-- Personal Information Card -->
-                <div class="enhanced-card">
-                    <div class="card-header">
-                        <h3><i class="fas fa-user-circle"></i> Personal Information</h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="detail-grid">
-                            <div class="detail-item">
-                                <label>Age:</label>
-                                <span>
-                                    <%= student.Age || 'Not specified' %>
-                                </span>
-                            </div>
-                            <div class="detail-item">
-                                <label>Sex:</label>
-                                <span>
-                                    <%= student.Sex || 'Not specified' %>
-                                </span>
-                            </div>
-                            <div class="detail-item">
-                                <label>Parent/Guardian:</label>
-                                <span>
-                                    <%= student['Parent/Guardian Name'] || 'Not specified' %>
-                                </span>
-                            </div>
-                            <div class="detail-item">
-                                <label>Contact:</label>
-                                <span>
-                                    <%= student.Contact || 'Not specified' %>
-                                </span>
-                            </div>
-                            <div class="detail-item">
-                                <label>Residence:</label>
-                                <span>
-                                    <%= student['Place of Residence'] || 'Not specified' %>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
                 <!-- Biography Card -->
                 <div class="enhanced-card">
@@ -736,6 +696,167 @@
                 --maroon-light: #993333;
                 --maroon-bg: #fff5f5;
             }
+            /* Square Profile Photo Styles */
+    .profile-photo-square {
+        width: 200px;
+        height: 200px;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 4px solid var(--maroon-primary);
+        box-shadow: 0 4px 15px rgba(128, 0, 0, 0.3);
+        background: #f8f9fa;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 30px;
+        flex-shrink: 0;
+    }
+
+    .square-photo {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+    }
+
+    .profile-header {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 40px;
+        padding: 30px;
+        background: linear-gradient(135deg, #fff5f5, #ffffff);
+        border-radius: 15px;
+        border: 1px solid #ffe6e6;
+    }
+
+    .profile-info {
+        flex: 1;
+    }
+
+    .profile-info h1 {
+        color: var(--maroon-dark);
+        margin-bottom: 8px;
+        font-size: 2.2rem;
+        font-weight: 700;
+    }
+
+    .admission-number {
+        color: var(--maroon-primary);
+        font-weight: 600;
+        font-size: 1.1rem;
+        margin-bottom: 5px;
+    }
+
+    .department {
+        color: #666;
+        font-size: 1rem;
+        margin-bottom: 20px;
+        padding: 6px 12px;
+        background: var(--maroon-bg);
+        border-radius: 20px;
+        display: inline-block;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .profile-header {
+            flex-direction: column;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .profile-photo-square {
+            margin-right: 0;
+            margin-bottom: 20px;
+            width: 180px;
+            height: 180px;
+        }
+
+        .profile-info h1 {
+            font-size: 1.8rem;
+        }
+
+        .action-buttons {
+            justify-content: center;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .profile-photo-square {
+            width: 150px;
+            height: 150px;
+        }
+
+        .profile-info h1 {
+            font-size: 1.5rem;
+        }
+    }
+
+    /* Enhanced action buttons */
+    .action-buttons {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+    }
+
+    .action-buttons .btn {
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: 2px solid var(--maroon-primary);
+        color: var(--maroon-primary);
+        background: transparent;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .action-buttons .btn:hover {
+        background: var(--maroon-primary);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(128, 0, 0, 0.3);
+    }
+
+    .action-buttons .btn-primary {
+        background: var(--maroon-primary);
+        color: white;
+    }
+
+    .action-buttons .btn-primary:hover {
+        background: var(--maroon-dark);
+        transform: translateY(-2px);
+    }
+
+    /* Profile meta information */
+    .profile-meta {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-top: 20px;
+    }
+
+    .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        border: 1px solid #e9ecef;
+    }
+
+    .meta-item i {
+        color: var(--maroon-primary);
+    }
+
+    .meta-item span {
+        font-weight: 500;
+        color: #495057;
+    }
 
             .form-section-header {
                 border-bottom: 2px solid var(--maroon-primary);

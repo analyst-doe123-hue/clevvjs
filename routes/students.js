@@ -32,6 +32,24 @@ cloudinary.v2.config({
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Helper function to get student photo path
+function getStudentPhotoPath(student) {
+    const dept = student.Department?.toLowerCase();
+    const admNo = student['Admission Number'];
+
+    // Map departments to folder names
+    const deptFolders = {
+        'germans': 'GER',
+        'education for generations': 'EFG',
+        'italians': 'IT',
+        'warmhearted group': 'WHG',
+        'assisted group': 'AG'
+    };
+
+    const folder = deptFolders[dept] || 'default';
+    return `/images/${folder}/${admNo}.jpg`;
+}
+
 // GET /students — List, search, or filter
 router.get("/", async (req, res) => {
     try {
@@ -89,12 +107,16 @@ router.get("/:adm_no", async (req, res) => {
         // Use stored biography if available, otherwise fall back to CSV biography
         const studentBiography = biography || student["Small Biography"] || "No biography available.";
 
+        // Ensure photo path is correct
+        const studentWithPhoto = {
+            ...student,
+            "Small Biography": studentBiography,
+            "Photo": student["Photo"] || getStudentPhotoPath(student)
+        };
+
         res.render("profile", {
             title: `${student["Full Name"]} - Profile | Daisy Portal`,
-            student: {
-                ...student,
-                "Small Biography": studentBiography
-            },
+            student: studentWithPhoto,
             terms,
             reports
         });
