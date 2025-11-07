@@ -1,35 +1,221 @@
 <header class="header">
         <nav class="navbar">
-                <a href="/" class="nav-brand">
-                        <i class="fas fa-graduation-cap"></i>
-                        Daisy Portal
-                </a>
+                <div class="nav-container">
+                        <a href="/" class="nav-brand">
+                                <i class="fas fa-graduation-cap"></i>
+                                Daisy Portal
+                        </a>
 
-                <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                </button>
+                        <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">
+                                <span class="hamburger-line"></span>
+                                <span class="hamburger-line"></span>
+                                <span class="hamburger-line"></span>
+                        </button>
 
-                <ul class="nav-menu" id="navMenu">
-                        <li><a href="/"
-                                        class="nav-link <%= typeof activePage !== 'undefined' && activePage === 'home' ? 'active' : '' %>">Home</a>
-                        </li>
-                        <li><a href="/about"
-                                        class="nav-link <%= typeof activePage !== 'undefined' && activePage === 'about' ? 'active' : '' %>">About
-                                        Us</a></li>
-                        <li><a href="/team"
-                                        class="nav-link <%= typeof activePage !== 'undefined' && activePage === 'team' ? 'active' : '' %>">Our
-                                        Team</a></li>
-                        <li><a href="/success"
-                                        class="nav-link <%= typeof activePage !== 'undefined' && activePage === 'success' ? 'active' : '' %>">Success
-                                        Stories</a></li>
-                        <li><a href="/contact"
-                                        class="nav-link <%= typeof activePage !== 'undefined' && activePage === 'contact' ? 'active' : '' %>">Contact</a>
-                        </li>
-                </ul>
+                        <ul class="nav-menu" id="navMenu">
+                                <li><a href="/"
+                                                class="nav-link <%= typeof activePage !== 'undefined' && activePage === 'home' ? 'active' : '' %>">Home</a>
+                                </li>
+                                <li><a href="/about"
+                                                class="nav-link <%= typeof activePage !== 'undefined' && activePage === 'about' ? 'active' : '' %>">About
+                                                Us</a></li>
+                                <li><a href="/team"
+                                                class="nav-link <%= typeof activePage !== 'undefined' && activePage === 'team' ? 'active' : '' %>">Our
+                                                Team</a></li>
+                                <li><a href="/success"
+                                                class="nav-link <%= typeof activePage !== 'undefined' && activePage === 'success' ? 'active' : '' %>">Success
+                                                Stories</a></li>
+                                <li><a href="/contact"
+                                                class="nav-link <%= typeof activePage !== 'undefined' && activePage === 'contact' ? 'active' : '' %>">Contact</a>
+                                </li>
+                        </ul>
+                </div>
         </nav>
 </header>
+
+<style>
+        .header {
+                background: linear-gradient(135deg, var(--maroon-primary), var(--maroon-dark));
+                box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+                position: sticky;
+                top: 0;
+                z-index: 1000;
+        }
+
+        .nav-container {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 0 1rem;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                height: 70px;
+        }
+
+        .nav-brand {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                font-size: 1.5rem;
+                font-weight: 700;
+                color:  #800000;
+                text-decoration: none;
+        }
+
+        .nav-brand i {
+                color: var(--gold);
+        }
+
+        .nav-menu {
+                display: flex;
+                list-style: none;
+                margin: 0;
+                padding: 0;
+                gap: 2rem;
+        }
+
+        .nav-link {
+                color:  #800000(255, 255, 255, 0.9);
+                text-decoration: none;
+                font-weight: 500;
+                padding: 0.5rem 0;
+                transition: all 0.3s ease;
+                position: relative;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+                color:  #800000;
+        }
+
+        .nav-link.active::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 2px;
+                background: var(--gold);
+        }
+
+        /* Mobile Menu Toggle - Improved Cross Animation */
+        .menu-toggle {
+                display: none;
+                flex-direction: column;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0.5rem;
+                width: 30px;
+                height: 30px;
+                justify-content: center;
+                align-items: center;
+                gap: 4px;
+                position: relative;
+                z-index: 1001;
+        }
+
+        .hamburger-line {
+                width: 20px;
+                height: 2px;
+                background:  #800000;
+                transition: all 0.3s ease;
+                transform-origin: center;
+        }
+
+        /* Cross animation when active */
+        .menu-toggle.active .hamburger-line:nth-child(1) {
+                transform: rotate(45deg) translate(4px, 4px);
+                width: 20px;
+        }
+
+        .menu-toggle.active .hamburger-line:nth-child(2) {
+                opacity: 0;
+                transform: scale(0);
+        }
+
+        .menu-toggle.active .hamburger-line:nth-child(3) {
+                transform: rotate(-45deg) translate(4px, -4px);
+                width: 20px;
+        }
+
+        /* Mobile Styles */
+        @media (max-width: 768px) {
+                .nav-container {
+                        height: 60px;
+                        padding: 0 1rem;
+                }
+
+                .menu-toggle {
+                        display: flex;
+                }
+
+                .nav-menu {
+                        position: fixed;
+                        top: 60px;
+                        left: 0;
+                        width: 100%;
+                        background:  #800000;
+                        flex-direction: column;
+                        gap: 0;
+                        padding: 1rem 0;
+                        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+                        transform: translateY(-100%);
+                        opacity: 0;
+                        visibility: hidden;
+                        transition: all 0.3s ease;
+                        z-index: 999;
+                }
+
+                .nav-menu.active {
+                        transform: translateY(0);
+                        opacity: 1;
+                        visibility: visible;
+                }
+
+                .nav-link {
+                        color: var(--maroon-primary);
+                        padding: 1rem 2rem;
+                        border-bottom: 1px solid rgba(128, 0, 0, 0.1);
+                        display: block;
+                        font-size: 1rem;
+                }
+
+                .nav-link:last-child {
+                        border-bottom: none;
+                }
+
+                .nav-link:hover,
+                .nav-link.active {
+                        background: rgba(128, 0, 0, 0.05);
+                        color: var(--maroon-dark);
+                }
+
+                .nav-link.active::after {
+                        display: none;
+                }
+        }
+
+        @media (max-width: 480px) {
+                .nav-container {
+                        height: 55px;
+                        padding: 0 0.75rem;
+                }
+
+                .nav-brand {
+                        font-size: 1.3rem;
+                }
+
+                .nav-menu {
+                        top: 55px;
+                }
+
+                .nav-link {
+                        padding: 0.875rem 1.5rem;
+                        font-size: 0.95rem;
+                }
+        }
+</style>
 
 <script>
         // Mobile menu functionality
@@ -37,9 +223,14 @@
                 const menuToggle = document.getElementById('menuToggle');
                 const navMenu = document.getElementById('navMenu');
 
-                menuToggle.addEventListener('click', function () {
+                menuToggle.addEventListener('click', function (e) {
+                        e.stopPropagation();
                         menuToggle.classList.toggle('active');
                         navMenu.classList.toggle('active');
+
+                        // Update aria-expanded for accessibility
+                        const isExpanded = menuToggle.classList.contains('active');
+                        menuToggle.setAttribute('aria-expanded', isExpanded);
                 });
 
                 // Close menu when clicking on a link
@@ -48,6 +239,7 @@
                         link.addEventListener('click', function () {
                                 menuToggle.classList.remove('active');
                                 navMenu.classList.remove('active');
+                                menuToggle.setAttribute('aria-expanded', 'false');
                         });
                 });
 
@@ -57,6 +249,16 @@
                         if (!isClickInsideNav && navMenu.classList.contains('active')) {
                                 menuToggle.classList.remove('active');
                                 navMenu.classList.remove('active');
+                                menuToggle.setAttribute('aria-expanded', 'false');
+                        }
+                });
+
+                // Close menu on escape key
+                document.addEventListener('keydown', function (event) {
+                        if (event.key === 'Escape' && navMenu.classList.contains('active')) {
+                                menuToggle.classList.remove('active');
+                                navMenu.classList.remove('active');
+                                menuToggle.setAttribute('aria-expanded', 'false');
                         }
                 });
         });

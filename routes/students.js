@@ -9,10 +9,14 @@ import { readCSV } from "../lib/csvStore.js";
 import {
     getStudentTerms,
     addStudentTerm,
+    deleteStudentTerm,
+    updateStudentTerm,
     getStudentReports,
     addStudentReport,
+    deleteStudentReport,
     getStudentBiography,
     updateStudentBiography,
+    deleteStudentBiography,
     getStudentGallery
 } from "../lib/studentDataStore.js";
 
@@ -72,9 +76,9 @@ router.get("/:adm_no", async (req, res) => {
             });
         }
 
-        const terms = getStudentTerms(adm_no);
-        const reports = getStudentReports(adm_no);
-        const biography = getStudentBiography(adm_no);
+        const terms = await getStudentTerms(adm_no);
+        const reports = await getStudentReports(adm_no);
+        const biography = await getStudentBiography(adm_no);
 
         // DEBUG: Log biography data
         console.log('Student Admission No:', adm_no);
@@ -109,7 +113,7 @@ router.post("/:adm_no/update-bio", async (req, res) => {
     try {
         const adm_no = req.params.adm_no;
         const { biography } = req.body;
-        const success = updateStudentBiography(adm_no, biography);
+        const success = await updateStudentBiography(adm_no, biography);
 
         res.json({
             success,
@@ -119,6 +123,22 @@ router.post("/:adm_no/update-bio", async (req, res) => {
     } catch (error) {
         console.error("Error updating biography:", error);
         res.status(500).json({ success: false, message: "Failed to update biography" });
+    }
+});
+
+// DELETE /students/:adm_no/delete-bio
+router.delete("/:adm_no/delete-bio", async (req, res) => {
+    try {
+        const adm_no = req.params.adm_no;
+        const success = await deleteStudentBiography(adm_no);
+
+        res.json({
+            success,
+            message: success ? "Biography deleted successfully" : "Failed to delete biography"
+        });
+    } catch (error) {
+        console.error("Error deleting biography:", error);
+        res.status(500).json({ success: false, message: "Failed to delete biography" });
     }
 });
 
@@ -152,6 +172,11 @@ router.post("/:adm_no/update-terms", async (req, res) => {
             concludingRemark
         } = req.body;
 
+        // Debug: Log the received date values
+        console.log('Received nextTermDate:', nextTermDate);
+        console.log('Received feesDueDate:', feesDueDate);
+        console.log('All form data:', req.body);
+
         if (!termName || !executiveSummary || !academicOverview || !nextTermDate || !concludingRemark) {
             return res.status(400).json({
                 success: false,
@@ -160,7 +185,7 @@ router.post("/:adm_no/update-terms", async (req, res) => {
         }
 
         // Use the comprehensive function with all fields
-        const success = addStudentTerm(adm_no, {
+        const success = await addStudentTerm(adm_no, {
             termName,
             executiveSummary,
             academicOverview,
@@ -188,7 +213,7 @@ router.post("/:adm_no/update-terms", async (req, res) => {
 
         if (success) {
             // Get the newly added term
-            const terms = getStudentTerms(adm_no);
+            const terms = await getStudentTerms(adm_no);
             const latestTerm = terms.length > 0 ? terms[0] : null;
 
             res.json({
@@ -214,6 +239,40 @@ router.post("/:adm_no/update-terms", async (req, res) => {
     }
 });
 
+// DELETE /students/:adm_no/delete-term/:termId
+router.delete("/:adm_no/delete-term/:termId", async (req, res) => {
+    try {
+        const { adm_no, termId } = req.params;
+        const success = await deleteStudentTerm(adm_no, termId);
+
+        res.json({
+            success,
+            message: success ? "Term deleted successfully" : "Failed to delete term"
+        });
+    } catch (error) {
+        console.error("Error deleting term:", error);
+        res.status(500).json({ success: false, message: "Failed to delete term" });
+    }
+});
+
+// PUT /students/:adm_no/update-term/:termId
+router.put("/:adm_no/update-term/:termId", async (req, res) => {
+    try {
+        const { adm_no, termId } = req.params;
+        const termData = req.body;
+
+        const success = await updateStudentTerm(adm_no, termId, termData);
+
+        res.json({
+            success,
+            message: success ? "Term updated successfully" : "Failed to update term"
+        });
+    } catch (error) {
+        console.error("Error updating term:", error);
+        res.status(500).json({ success: false, message: "Failed to update term" });
+    }
+});
+
 // ✅ Universal Mini India Report Generation
 router.get("/:adm_no/generate-report", async (req, res) => {
     try {
@@ -223,7 +282,7 @@ router.get("/:adm_no/generate-report", async (req, res) => {
         if (!student) return res.status(404).json({ success: false, message: "Student not found" });
 
         // Get latest term data
-        const terms = getStudentTerms(adm_no);
+        const terms = await getStudentTerms(adm_no);
         const latestTerm = terms.length > 0 ? terms[0] : null;
 
         if (!latestTerm) {
@@ -255,7 +314,7 @@ router.get("/:adm_no/generate-report", async (req, res) => {
 
         // Save report to database
         const filename = `Mini_India_Report_${student['Full Name'].replace(/\s+/g, '_')}_${latestTerm["TermName"].replace(/\s+/g, '_')}.pdf`;
-        const success = addStudentReport(adm_no, filename, uploadResult.public_id);
+        const success = await addStudentReport(adm_no, filename, uploadResult.public_id);
 
         if (success) {
             res.json({
@@ -287,13 +346,47 @@ router.get("/:adm_no/generate-report", async (req, res) => {
     }
 });
 
+// DELETE /students/:adm_no/delete-report/:public_id
+router.delete("/:adm_no/delete-report/:public_id", async (req, res) => {
+    try {
+        const { adm_no, public_id } = req.params;
+
+        // Delete from database
+        const dbSuccess = await deleteStudentReport(adm_no, public_id);
+
+        // Also delete from Cloudinary
+        let cloudinarySuccess = true;
+        try {
+            await cloudinary.v2.uploader.destroy(public_id);
+        } catch (error) {
+            console.error("Error deleting from Cloudinary:", error);
+            cloudinarySuccess = false;
+        }
+
+        res.json({
+            success: dbSuccess,
+            message: dbSuccess ?
+                (cloudinarySuccess ? "Report deleted successfully" : "Report deleted from database but Cloudinary deletion failed") :
+                "Failed to delete report from database"
+        });
+
+    } catch (error) {
+        console.error("Error deleting report:", error);
+        res.status(500).json({
+            success: false,
+            message: "Failed to delete report",
+            error: error.message
+        });
+    }
+});
+
 // ✅ NEW: Biography PDF Generation
 router.post("/:adm_no/generate-biography-pdf", async (req, res) => {
     try {
         const adm_no = req.params.adm_no;
         const students = await readCSV("students.csv");
         const student = students.find((s) => s["Admission Number"] === adm_no);
-        
+
         if (!student) {
             return res.status(404).json({ success: false, message: "Student not found" });
         }
@@ -342,18 +435,18 @@ router.post("/:adm_no/generate-biography-pdf", async (req, res) => {
 router.get("/:adm_no/download-report/:public_id", async (req, res) => {
     try {
         const { adm_no, public_id } = req.params;
-        
+
         // Get report information
-        const reports = getStudentReports(adm_no);
+        const reports = await getStudentReports(adm_no);
         const report = reports.find(r => r.PublicId === public_id || r.public_id === public_id);
-        
+
         if (!report) {
             return res.status(404).json({ success: false, message: "Report not found" });
         }
 
         // Redirect to Cloudinary download URL
         const downloadUrl = `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/raw/upload/fl_attachment:${report.Filename || report.filename}/${public_id}`;
-        
+
         res.redirect(downloadUrl);
 
     } catch (error) {
@@ -389,7 +482,7 @@ const C = (text, fallback = "No update was provided for this section.") => {
 // Helper function to get pronouns based on gender
 const getPronouns = (student) => {
     const gender = student["Gender"] ? student["Gender"].toLowerCase() : '';
-    
+
     if (gender.includes('female') || gender === 'f') {
         return {
             subject: 'she',
@@ -442,11 +535,11 @@ function drawMainHeader(doc) {
     doc.fillColor(COLOR_MUTED)
         .font(FONT_REGULAR)
         .fontSize(9)
-        .text(`Generated on: ${new Date().toLocaleDateString('en-US', { 
-            weekday: 'long', 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric' 
+        .text(`Generated on: ${new Date().toLocaleDateString('en-US', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
         })}`, 50, 75, { align: 'center' });
 }
 
@@ -466,12 +559,12 @@ function drawContinuationHeader(doc, student) {
 function drawProfileBox(doc, student, term) {
     const boxY = 110;
     const boxHeight = 125;
-    
+
     // Background box
     doc.rect(50, boxY, 500, boxHeight)
-       .fill(COLOR_BG)
-       .stroke(COLOR_STROKE);
-    
+        .fill(COLOR_BG)
+        .stroke(COLOR_STROKE);
+
     const x = 65;
     const y = boxY + 15;
     const col1 = x;
@@ -481,37 +574,37 @@ function drawProfileBox(doc, student, term) {
 
     // Title
     doc.fillColor(COLOR_TITLE)
-       .font(FONT_BOLD)
-       .fontSize(12)
-       .text('LEARNER PROFILE', col1, y);
+        .font(FONT_BOLD)
+        .fontSize(12)
+        .text('LEARNER PROFILE', col1, y);
 
     // Left Column Labels
     doc.fillColor(COLOR_TEXT)
-       .font(FONT_REGULAR)
-       .fontSize(10)
-       .text('Full Name:', col1, y + 25)
-       .text('Admission No:', col1, y + 40)
-       .text('Gender:', col1, y + 55)
-       .text('Sponsor Group:', col1, y + 70)
-       .text('Academic Level:', col1, y + 85);
-    
+        .font(FONT_REGULAR)
+        .fontSize(10)
+        .text('Full Name:', col1, y + 25)
+        .text('Admission No:', col1, y + 40)
+        .text('Gender:', col1, y + 55)
+        .text('Sponsor Group:', col1, y + 70)
+        .text('Academic Level:', col1, y + 85);
+
     // Left Column Data
     doc.font(FONT_BOLD)
-       .text(C(student["Full Name"], "N/A"), col2, y + 25)
-       .text(C(student["Admission Number"], "N/A"), col2, y + 40)
-       .text(C(student["Gender"], "N/A"), col2, y + 55)
-       .text(C(student["Sponsorship Group"], "N/A"), col2, y + 70)
-       .text(C(student["Educational Level"], "N/A"), col2, y + 85);
-    
+        .text(C(student["Full Name"], "N/A"), col2, y + 25)
+        .text(C(student["Admission Number"], "N/A"), col2, y + 40)
+        .text(C(student["Gender"], "N/A"), col2, y + 55)
+        .text(C(student["Sponsorship Group"], "N/A"), col2, y + 70)
+        .text(C(student["Educational Level"], "N/A"), col2, y + 85);
+
     // Right Column Labels
     doc.font(FONT_REGULAR)
-       .text('Report Period:', col3, y + 25)
-       .text('Program:', col3, y + 40);
+        .text('Report Period:', col3, y + 25)
+        .text('Program:', col3, y + 40);
 
     // Right Column Data
     doc.font(FONT_BOLD)
-       .text(C(term["TermName"], "N/A"), col4, y + 25)
-       .text(C(student["Department"], "N/A"), col4, y + 40);
+        .text(C(term["TermName"], "N/A"), col4, y + 25)
+        .text(C(student["Department"], "N/A"), col4, y + 40);
 
     // Profile Picture Placeholder (Right side)
     const profilePicX = 420;
@@ -519,16 +612,16 @@ function drawProfileBox(doc, student, term) {
     const profilePicSize = 70;
 
     doc.rect(profilePicX, profilePicY, profilePicSize, profilePicSize)
-       .fill('#e9ecef')
-       .stroke(COLOR_STROKE);
+        .fill('#e9ecef')
+        .stroke(COLOR_STROKE);
 
     doc.fillColor(COLOR_MUTED)
-       .font(FONT_ITALIC)
-       .fontSize(8)
-       .text('PROFILE\nIMAGE', profilePicX + 5, profilePicY + 25, { 
-           width: profilePicSize - 10, 
-           align: 'center' 
-       });
+        .font(FONT_ITALIC)
+        .fontSize(8)
+        .text('PROFILE\nIMAGE', profilePicX + 5, profilePicY + 25, {
+            width: profilePicSize - 10,
+            align: 'center'
+        });
 
     doc.y = boxY + boxHeight + 30;
 }
@@ -539,38 +632,38 @@ function drawSection(doc, title, content, options = {}) {
 
     // Section Title
     doc.fillColor(COLOR_TITLE)
-       .font(FONT_BOLD)
-       .fontSize(12)
-       .text(title, 50, doc.y, { underline: true });
-    
+        .font(FONT_BOLD)
+        .fontSize(12)
+        .text(title, 50, doc.y, { underline: true });
+
     doc.y += 20;
 
     // Content
     doc.fillColor(COLOR_TEXT)
-       .font(FONT_REGULAR)
-       .fontSize(10);
+        .font(FONT_REGULAR)
+        .fontSize(10);
 
     if (bullet) {
         // Handle bullet points
         const lines = content.split('\n');
         const bulletRadius = 2;
-        
+
         lines.forEach((line, index) => {
             if (line.trim()) {
                 const bulletX = 50;
                 const textX = 65;
-                
+
                 // Draw bullet point
                 doc.circle(bulletX, doc.y + 4, bulletRadius)
-                   .fill(COLOR_TITLE);
-                
+                    .fill(COLOR_TITLE);
+
                 // Draw text
                 doc.text(line.trim(), textX, doc.y, {
                     width: 485,
                     align: 'justify',
                     lineGap: 1.2
                 });
-                
+
                 doc.y += doc.currentLineHeight() + 2;
             }
         });
@@ -581,10 +674,10 @@ function drawSection(doc, title, content, options = {}) {
             align: 'justify',
             lineGap: 1.2
         });
-        
+
         doc.y += doc.currentLineHeight();
     }
-    
+
     doc.y += 15;
 }
 
@@ -612,94 +705,94 @@ const generateBiographyPDF = (student, biography) => {
 
             // Header
             doc.fillColor(COLOR_TITLE)
-               .font(FONT_BOLD)
-               .fontSize(20)
-               .text('STUDENT BIOGRAPHY', 50, 50, { align: 'center' });
+                .font(FONT_BOLD)
+                .fontSize(20)
+                .text('STUDENT BIOGRAPHY', 50, 50, { align: 'center' });
 
             doc.fillColor(COLOR_MUTED)
-               .font(FONT_REGULAR)
-               .fontSize(10)
-               .text(`Generated on: ${new Date().toLocaleDateString('en-US', { 
-                   weekday: 'long', 
-                   year: 'numeric', 
-                   month: 'long', 
-                   day: 'numeric' 
-               })}`, 50, 75, { align: 'center' });
+                .font(FONT_REGULAR)
+                .fontSize(10)
+                .text(`Generated on: ${new Date().toLocaleDateString('en-US', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                })}`, 50, 75, { align: 'center' });
 
             // Student Profile Box
             const boxY = 110;
             const boxHeight = 100;
-            
+
             doc.rect(50, boxY, 500, boxHeight)
-               .fill(COLOR_BG)
-               .stroke(COLOR_STROKE);
+                .fill(COLOR_BG)
+                .stroke(COLOR_STROKE);
 
             const x = 65;
             const y = boxY + 15;
 
             // Profile Title
             doc.fillColor(COLOR_TITLE)
-               .font(FONT_BOLD)
-               .fontSize(12)
-               .text('STUDENT PROFILE', x, y);
+                .font(FONT_BOLD)
+                .fontSize(12)
+                .text('STUDENT PROFILE', x, y);
 
             // Student Information
             doc.fillColor(COLOR_TEXT)
-               .font(FONT_REGULAR)
-               .fontSize(10)
-               .text('Full Name:', x, y + 25)
-               .text('Admission No:', x, y + 40)
-               .text('Department:', x, y + 55)
-               .text('Educational Level:', x, y + 70);
+                .font(FONT_REGULAR)
+                .fontSize(10)
+                .text('Full Name:', x, y + 25)
+                .text('Admission No:', x, y + 40)
+                .text('Department:', x, y + 55)
+                .text('Educational Level:', x, y + 70);
 
             doc.font(FONT_BOLD)
-               .text(C(student["Full Name"], "N/A"), x + 80, y + 25)
-               .text(C(student["Admission Number"], "N/A"), x + 80, y + 40)
-               .text(C(student["Department"], "N/A"), x + 80, y + 55)
-               .text(C(student["Educational Level"], "N/A"), x + 80, y + 70);
+                .text(C(student["Full Name"], "N/A"), x + 80, y + 25)
+                .text(C(student["Admission Number"], "N/A"), x + 80, y + 40)
+                .text(C(student["Department"], "N/A"), x + 80, y + 55)
+                .text(C(student["Educational Level"], "N/A"), x + 80, y + 70);
 
             // Right side information
             doc.font(FONT_REGULAR)
-               .text('Gender:', x + 250, y + 25)
-               .text('Sponsor Group:', x + 250, y + 40)
-               .text('Age:', x + 250, y + 55);
+                .text('Gender:', x + 250, y + 25)
+                .text('Sponsor Group:', x + 250, y + 40)
+                .text('Age:', x + 250, y + 55);
 
             doc.font(FONT_BOLD)
-               .text(C(student["Gender"], "N/A"), x + 300, y + 25)
-               .text(C(student["Sponsorship Group"], "N/A"), x + 300, y + 40)
-               .text(C(student["Age"], "N/A"), x + 300, y + 55);
+                .text(C(student["Gender"], "N/A"), x + 300, y + 25)
+                .text(C(student["Sponsorship Group"], "N/A"), x + 300, y + 40)
+                .text(C(student["Age"], "N/A"), x + 300, y + 55);
 
             doc.y = boxY + boxHeight + 30;
 
             // Biography Section
             doc.fillColor(COLOR_TITLE)
-               .font(FONT_BOLD)
-               .fontSize(14)
-               .text('BIOGRAPHY', 50, doc.y, { underline: true });
+                .font(FONT_BOLD)
+                .fontSize(14)
+                .text('BIOGRAPHY', 50, doc.y, { underline: true });
 
             doc.y += 25;
 
             // Biography Content
             doc.fillColor(COLOR_TEXT)
-               .font(FONT_REGULAR)
-               .fontSize(11)
-               .text(biography, 50, doc.y, {
-                   width: 500,
-                   align: 'justify',
-                   lineGap: 1.5
-               });
+                .font(FONT_REGULAR)
+                .fontSize(11)
+                .text(biography, 50, doc.y, {
+                    width: 500,
+                    align: 'justify',
+                    lineGap: 1.5
+                });
 
             // Footer
             const pageBottom = doc.page.height - 40;
             doc.fillColor(COLOR_MUTED)
-               .font(FONT_REGULAR)
-               .fontSize(8)
-               .text(
-                   `Biography for ${student["Full Name"]} | Daisy Education Portal | ${new Date().toLocaleDateString()}`,
-                   doc.page.margins.left,
-                   pageBottom,
-                   { align: 'center', width: doc.page.width - doc.page.margins.left * 2 }
-               );
+                .font(FONT_REGULAR)
+                .fontSize(8)
+                .text(
+                    `Biography for ${student["Full Name"]} | Daisy Education Portal | ${new Date().toLocaleDateString()}`,
+                    doc.page.margins.left,
+                    pageBottom,
+                    { align: 'center', width: doc.page.width - doc.page.margins.left * 2 }
+                );
 
             doc.end();
 
@@ -752,7 +845,7 @@ const generateUniversalReport = (student, term) => {
                 `Class Rank: ${C(term["AcademicRank"], "Not specified")}\n` +
                 `Key Strengths: ${C(term["AcademicStrengths"], "None noted")}\n` +
                 `Key Challenges: ${C(term["AcademicChallenges"], "None noted")}`;
-            
+
             drawSection(
                 doc,
                 "2. Academic Progress & Achievements",
@@ -763,7 +856,7 @@ const generateUniversalReport = (student, term) => {
             // 3. Personal & Social Development
             const personalText = `At School: ${C(term["PersonalSchool"])}\n` +
                 `Extracurricular Involvement: ${C(term["PersonalExtra"], "Not involved in any activities this term")}`;
-            
+
             drawSection(
                 doc,
                 "3. Personal & Social Development",
@@ -800,7 +893,7 @@ const generateUniversalReport = (student, term) => {
             const planningText = `Expected Return Date: ${nextTermDate}\n` +
                 `Academic Goals: ${C(term["GoalsAcademic"])}\n` +
                 `Personal Goals: ${C(term["GoalsPersonal"])}`;
-            
+
             drawSection(
                 doc,
                 "5. Next Term Planning & Goals",
@@ -847,7 +940,7 @@ const generateUniversalReport = (student, term) => {
             );
 
             // 8. Concluding Remarks
-            const concludingText = C(term["ConcludingRemark"], 
+            const concludingText = C(term["ConcludingRemark"],
                 `${student["Full Name"]} continues to show steady progress and maintains good standing in ${pronouns.possessive} academic and social life. ${pronouns.subject.charAt(0).toUpperCase() + pronouns.subject.slice(1)} consistent effort and positive engagement are commendable and highly appreciated. We look forward to ${pronouns.possessive} continued development and success in the next term.`
             );
 

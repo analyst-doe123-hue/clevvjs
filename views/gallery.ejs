@@ -13,6 +13,13 @@
                 --text-muted: #6c757d;
             }
 
+            body {
+                margin: 0;
+                padding: 0;
+                min-height: 100vh;
+                background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            }
+
             .profile-navigation {
                 background: white;
                 padding: 1.5rem;
@@ -109,6 +116,7 @@
                 padding: 1rem;
                 resize: vertical;
                 min-height: 100px;
+                width: 100%;
             }
 
             .btn-primary {
@@ -345,6 +353,13 @@
                 margin-bottom: 0.5rem;
             }
 
+            /* Full width layout */
+            .container {
+                max-width: 100%;
+                padding: 0 2rem;
+                margin: 0 auto;
+            }
+
             @media (max-width: 768px) {
                 .nav-buttons {
                     justify-content: center;
@@ -393,6 +408,10 @@
 
                 .enhanced-card {
                     padding: 1.5rem;
+                }
+
+                .container {
+                    padding: 0 1rem;
                 }
             }
         </style>

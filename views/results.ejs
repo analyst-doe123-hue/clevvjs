@@ -13,8 +13,15 @@
                 --text-muted: #6c757d;
             }
 
+            body {
+                margin: 0;
+                padding: 0;
+                min-height: 100vh;
+                background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            }
+
             .results-container {
-                max-width: 1200px;
+                max-width: 100%;
                 margin: 2rem auto;
                 padding: 0 2rem;
             }
@@ -256,17 +263,19 @@
                 box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             }
 
-            .modal-pdf-container {
+            .modal-doc-container {
                 flex: 1;
                 min-height: 0;
                 background: #f8f9fa;
+                display: flex;
+                justify-content: center;
+                align-items: center;
             }
 
-            .pdf-viewer {
-                width: 100%;
-                height: 100%;
-                min-height: 70vh;
-                border: none;
+            .modal-image {
+                max-width: 100%;
+                max-height: 80vh;
+                object-fit: contain;
             }
 
             .modal-nav {
@@ -480,11 +489,10 @@
                             <div class="file-input-label">
                                 <i class="fas fa-cloud-upload-alt"></i>
                                 <div>Click to select files or drag and drop</div>
-                                <small class="form-text text-muted">Supported formats: PDF, JPG, PNG (Multiple files
-                                    allowed)</small>
+                                <small class="form-text text-muted">Supported formats: JPG, PNG, GIF, WebP (Multiple
+                                    files allowed)</small>
                             </div>
-                            <input type="file" name="result_files" id="result_files" accept=".pdf,image/*" multiple
-                                required>
+                            <input type="file" name="result_files" id="result_files" accept="image/*" multiple required>
                         </div>
                         <div id="resultsFileList" class="mt-2"></div>
                     </div>
@@ -512,7 +520,7 @@
                             <% results.forEach((r, index)=> { %>
                                 <div class="result-card">
                                     <div class="result-icon">
-                                        <i class="fas fa-file-pdf"></i>
+                                        <i class="fas fa-file-alt"></i>
                                     </div>
                                     <div class="result-details">
                                         <h4>
@@ -529,13 +537,13 @@
                                             </p>
                                             <% } %>
                                                 <span class="file-type-badge">
-                                                    <%= r.filename ? r.filename.split('.').pop().toUpperCase() : 'PDF'
+                                                    <%= r.filename ? r.filename.split('.').pop().toUpperCase() : 'IMG'
                                                         %>
                                                 </span>
                                     </div>
                                     <div class="result-actions">
                                         <button class="btn btn-outline-primary" onclick="openResultModal(<%= index %>)">
-                                            <i class="fas fa-eye"></i> View
+                                            <i class="fas fa-expand"></i> View
                                         </button>
                                         <a href="<%= r.url %>" target="_blank" class="btn btn-success">
                                             <i class="fas fa-download"></i> Download
@@ -561,8 +569,8 @@
             <div class="modal-content">
                 <button class="modal-close" onclick="closeResultModal()">&times;</button>
                 <button class="modal-nav nav-prev" onclick="navigateResult(-1)">❮</button>
-                <div class="modal-pdf-container">
-                    <iframe id="pdfViewer" class="pdf-viewer" src="" frameborder="0"></iframe>
+                <div class="modal-doc-container">
+                    <img id="modalImage" class="modal-image" src="" alt="">
                 </div>
                 <button class="modal-nav nav-next" onclick="navigateResult(1)">❯</button>
                 <div class="modal-info">
@@ -622,23 +630,14 @@
             function openResultModal(index) {
                 currentResultIndex = index;
                 const modal = document.getElementById('resultModal');
-                const pdfViewer = document.getElementById('pdfViewer');
+                const modalImage = document.getElementById('modalImage');
                 const resultCounter = document.getElementById('resultCounter');
                 const downloadLink = document.getElementById('downloadLink');
                 const modalNote = document.getElementById('modalResultNote');
 
                 const currentResult = currentResults[currentResultIndex];
 
-                // Check if it's an image or PDF
-                if (currentResult.filename && currentResult.filename.match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
-                    // It's an image - display directly
-                    pdfViewer.src = currentResult.url;
-                } else {
-                    // It's a PDF - use Google Docs viewer
-                    const fileUrl = encodeURIComponent(currentResult.url);
-                    pdfViewer.src = `https://docs.google.com/gview?url=${fileUrl}&embedded=true`;
-                }
-
+                modalImage.src = currentResult.url;
                 resultCounter.textContent = `Result ${currentResultIndex + 1} of ${currentResults.length}`;
                 modalNote.textContent = currentResult.note || 'No note added';
                 downloadLink.href = currentResult.url;
@@ -662,21 +661,14 @@
                     currentResultIndex = 0;
                 }
 
-                const pdfViewer = document.getElementById('pdfViewer');
+                const modalImage = document.getElementById('modalImage');
                 const resultCounter = document.getElementById('resultCounter');
                 const downloadLink = document.getElementById('downloadLink');
                 const modalNote = document.getElementById('modalResultNote');
 
                 const currentResult = currentResults[currentResultIndex];
 
-                // Check if it's an image or PDF
-                if (currentResult.filename && currentResult.filename.match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
-                    pdfViewer.src = currentResult.url;
-                } else {
-                    const fileUrl = encodeURIComponent(currentResult.url);
-                    pdfViewer.src = `https://docs.google.com/gview?url=${fileUrl}&embedded=true`;
-                }
-
+                modalImage.src = currentResult.url;
                 resultCounter.textContent = `Result ${currentResultIndex + 1} of ${currentResults.length}`;
                 modalNote.textContent = currentResult.note || 'No note added';
                 downloadLink.href = currentResult.url;

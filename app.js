@@ -13,6 +13,10 @@ import letterRoutes from "./routes/letter.js";
 import departmentRoutes from "./routes/departments.js";
 import searchRoutes from "./routes/search.js";
 import reportsRoutes from "./routes/reports.js";
+
+// Database imports
+import { initializeDatabase, testConnection } from "./lib/databaseManager.js";
+
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
@@ -20,6 +24,24 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// -------------------------------
+//  Initialize Database
+// -------------------------------
+async function initializeApp() {
+    try {
+        console.log('🔄 Initializing database connection...');
+        const dbSuccess = await initializeDatabase();
+
+        if (dbSuccess) {
+            console.log('✅ Database initialized successfully with MongoDB');
+        } else {
+            console.log('✅ Database initialized successfully with CSV fallback');
+        }
+    } catch (error) {
+        console.log('⚠️ Using CSV fallback mode:', error.message);
+    }
+}
 
 // -------------------------------
 //  View Engine Setup
@@ -53,6 +75,22 @@ app.use("/search", searchRoutes);
 app.use("/reports", reportsRoutes);
 
 // -------------------------------
+//  Database Status Route
+// -------------------------------
+app.get("/db-status", async (req, res) => {
+    try {
+        const status = await testConnection();
+        res.json(status);
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Database connection failed",
+            error: error.message
+        });
+    }
+});
+
+// -------------------------------
 //  Static Files (after routes to prevent route conflicts)
 // -------------------------------
 app.use(express.static(path.join(__dirname, "public")));
@@ -71,6 +109,8 @@ app.use((req, res) => {
 // -------------------------------
 //  Start Server
 // -------------------------------
-app.listen(PORT, () => {
-    console.log(`🚀 Server running on http://localhost:${PORT}`);
+initializeApp().then(() => {
+    app.listen(PORT, () => {
+        console.log(`🚀 Server running on http://localhost:${PORT}`);
+    });
 });

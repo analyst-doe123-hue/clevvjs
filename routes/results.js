@@ -19,7 +19,7 @@ router.get("/:adm_no", async (req, res) => {
     res.render("results", { title: `Results - ${student["Full Name"]}`, student, results });
 });
 
-// FIXED: Changed from single to array and updated field name
+// FIXED: Changed to accept only images
 router.post("/upload/:adm_no", upload.array("result_files"), async (req, res) => {
     const adm_no = req.params.adm_no;
     const files = req.files; // Changed from req.file to req.files
@@ -39,8 +39,8 @@ router.post("/upload/:adm_no", upload.array("result_files"), async (req, res) =>
     const uploadPromises = files.map(file => {
         return new Promise((resolve, reject) => {
             const stream = cloudinary.uploader.upload_stream({
-                folder: `results/${adm_no}`,
-                resource_type: "raw"
+                folder: `results/${adm_no}`
+                // Removed resource_type: "raw" to treat as images
             }, (error, result) => {
                 if (error) {
                     console.error(error);
@@ -88,7 +88,7 @@ router.post("/delete/:adm_no", express.urlencoded({ extended: true }), async (re
     const { public_id } = req.body;
     const adm_no = req.params.adm_no;
     try {
-        await cloudinary.uploader.destroy(public_id, { resource_type: "raw" });
+        await cloudinary.uploader.destroy(public_id); // Removed resource_type: "raw"
         const students = await readCSV("students.csv"); // FIXED: was "tudents.csv"
         const studentIndex = students.findIndex((s) => s["Admission Number"] === adm_no);
         if (studentIndex === -1) return res.status(404).send("Student not found");
